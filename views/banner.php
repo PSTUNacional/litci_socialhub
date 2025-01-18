@@ -49,8 +49,9 @@ get_component('header');
         width: 100%;
         height: 100%;
         max-height: 65%;
-        object-fit: cover;
-        border-radius: 0 0 48px 58px;
+        border-radius: 0 0 48px 48px;
+        background-size: cover;
+        background-position: center;
     }
 
     .catbadge {
@@ -161,7 +162,7 @@ get_component('header');
         <div id="hidden">
             <div id="banner">
                 <img src="../assets/img/logo_white_shadow.png" alt="" id="logo">
-                <img src="" alt="" id="picture">
+                <div alt="" id="picture"></div>
                 <div class="safearea">
                     <div class="catbadge"></div>
                     <h1 id="bannerTitle"></h1>
@@ -219,7 +220,7 @@ get_component('header');
                     banner = banners[0];
 
                     img = document.getElementById('picture');
-                    img.src = banner['fimg_url'];
+                    img.style.backgroundImage = 'url(' + banner['fimg_url'] + ')';
 
                     category = banner['categories_names'][0]
                     if (category === 'Destacado') {
@@ -232,30 +233,26 @@ get_component('header');
                     h1 = document.getElementById('bannerTitle');
                     title = banner['title']['rendered'];
                     h1.innerHTML = title;
+                }).then(() => {
+                    const minHeight = 200;
+                    const maxHeight = 280;
+                    let fontSize = 72;
 
-                    document.querySelector
+                    function adjustFontSize() {
+                        h1.style.fontSize = fontSize + 'px';
+                        const h1Height = h1.offsetHeight;
 
-                    img.onload = () => {
-                        const minHeight = 200;
-                        const maxHeight = 280;
-                        let fontSize = 72;
-
-                        function adjustFontSize() {
-                            h1.style.fontSize = fontSize + 'px';
-                            const h1Height = h1.offsetHeight;
-
-                            if (h1Height < minHeight) {
-                                fontSize++;
-                                adjustFontSize();
-                            } else if (h1Height > maxHeight) {
-                                fontSize--;
-                                adjustFontSize();
-                            }
+                        if (h1Height < minHeight) {
+                            fontSize++;
+                            adjustFontSize();
+                        } else if (h1Height > maxHeight) {
+                            fontSize--;
+                            adjustFontSize();
                         }
-                        adjustFontSize();
-
-                        createImage('banner', 'bannerPlace', 1080, 1350)
                     }
+                    adjustFontSize();
+
+                    createImage('banner', 'bannerPlace', 1080, 1350)
                 })
         }
 
