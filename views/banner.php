@@ -243,6 +243,7 @@ get_component('header');
     <script>
         const bannerPlace = document.getElementById('bannerPlace')
         let source = 'pt';
+        let cta = 'Leia em <b>litci.org</b>';
         document.getElementById('sourceSelector').addEventListener('change', (e) => {
             source = e.target.value;
             fetchPosts();
@@ -252,9 +253,11 @@ get_component('header');
             switch (source) {
                 case 'pt':
                     api = 'https://litci.org/pt/wp-json/wp/v2/posts';
+                    cta = 'Leia em <b>litci.org/pt</b>';
                     break;
                 case 'es':
                     api = 'https://litci.org/es/wp-json/wp/v2/posts';
+                    cta = 'Lea en <b>litci.org/es</b>';
                     break;
                 default:
                     api = 'https://litci.org/pt/wp-json/wp/v2/posts';
@@ -303,7 +306,7 @@ get_component('header');
                         }
                         place.querySelector('.catbadge').innerHTML = category;
 
-                        place.querySelector('p b').innerText = 'litci.org/' + source;
+                        place.querySelector('p').innerHTML = cta;
 
                         h1 = place.querySelector('.banner-title');
                         title = banner['title']['rendered'];
