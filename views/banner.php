@@ -11,12 +11,12 @@ get_component('header');
         overflow: hidden;
     }
 
-    #banner {
-        width: 1080px;
-        height: 1350px;
+    #bannerOne,
+    #bannerFour,
+    #story {
         background-color: rgb(22, 23, 19);
-        display: flex;
         flex-direction: column;
+        display: flex;
         color: #fff;
         font-family: sans-serif;
         font-size: 24px;
@@ -24,7 +24,22 @@ get_component('header');
         position: relative;
     }
 
-    #banner #logo {
+    #bannerOne {
+        width: 1080px;
+        height: 1080px;
+    }
+
+    #bannerFour {
+        width: 1080px;
+        height: 1350px;
+    }
+
+    #story {
+        width: 1080px;
+        height: 1920px;
+    }
+
+    .lit-logo {
         position: absolute;
         top: 96px;
         left: 96px;
@@ -32,22 +47,36 @@ get_component('header');
         max-width: 96px;
     }
 
-    #bannerPlace canvas {
+    #bannerOnePlace canvas,
+    #bannerFourPlace canvas,
+    #storyPlace canvas {
         max-width: 400px;
     }
 
     .safearea {
         width: 100%;
-        padding: 0 96px 135px 96px;
         display: flex;
         flex-direction: column;
         gap: 24px;
         margin-top: -24px;
     }
 
-    #picture {
+    #bannerOne .safearea {
+        padding: 0 96px 96px 96px;
+    }
+
+    #bannerFour .safearea {
+        padding: 0 96px 96px 96px;
+    }
+
+    #story .safearea {
+        padding: 0 96px 320px 96px;
+    }
+
+    .picture-container {
         width: 100%;
         height: 100%;
+        display: block;
         max-height: 65%;
         border-radius: 0 0 48px 48px;
         background-size: cover;
@@ -63,7 +92,7 @@ get_component('header');
         width: fit-content;
     }
 
-    #banner h1 {
+    .banner-title {
         font-size: 3em;
         color: #fff;
     }
@@ -78,11 +107,20 @@ get_component('header');
         color: #fff;
     }
 
-    #bannerPlace {
-        max-width: 400px;
+    #bannerOnePlace canvas,
+    #bannerFourPlace canvas,
+    #storyPlace canvas {
+        max-width: 100%;
     }
 
-    #bannerPlace h4 {
+    #bannerFourPlace,
+    #storyPlace{
+        display: none;
+    }
+
+    #bannerOnePlace h4,
+    #bannerFourPlace h4,
+    #storyPlace h4 {
         width: 400px;
         height: 400px;
         border-radius: 8px;
@@ -117,6 +155,7 @@ get_component('header');
         border-radius: 8px;
         border: none;
         outline: none;
+        cursor: pointer;
     }
 
     .button.primary {
@@ -153,23 +192,52 @@ get_component('header');
                 </form>
             </div>
             <div class="card banner-result">
-                <div id="bannerPlace">
+                <div id="bannerOnePlace">
                     <h4>Select a post to render a banner =)</h4>
                 </div>
-                <button class="button primary" type="button" onclick="download('bannerPlace', 'LIT-Banner')">Download</button>
+                <div id="bannerFourPlace">
+                    <h4>Select a post to render a banner =)</h4>
+                </div>
+                <div id="storyPlace">
+                    <h4>Select a post to render a banner =)</h4>
+                </div>
+                <div style="display:flex; gap:12px;">
+                <button class="button primary" type="button" onclick="download('bannerOnePlace', 'LIT-Banner-Square')">Banner 1:1</button>
+                <button class="button primary" type="button" onclick="download('bannerFourPlace', 'LIT-Banner-FourByFive')">Banner 4:5</button>
+                <button class="button primary" type="button" onclick="download('storyPlace', 'LIT-Story')">Story</button>
+                </div>
             </div>
         </div>
         <div id="hidden">
-            <div id="banner">
-                <img src="../assets/img/logo_white_shadow.png" alt="" id="logo">
-                <div alt="" id="picture"></div>
+            <div id="bannerOne">
+                <img src="../assets/img/logo_white_shadow.png" alt="" class="lit-logo">
+                <div alt="" class="picture-container"></div>
                 <div class="safearea">
                     <div class="catbadge"></div>
-                    <h1 id="bannerTitle"></h1>
+                    <h1 class="banner-title"></h1>
+                    <p>Leia em <b>litci.org</b></p>
+                </div>
+            </div>
+            <div id="bannerFour">
+                <img src="../assets/img/logo_white_shadow.png" alt="" class="lit-logo">
+                <div alt="" class="picture-container"></div>
+                <div class="safearea">
+                    <div class="catbadge"></div>
+                    <h1 class="banner-title"></h1>
+                    <p>Leia em <b>litci.org</b></p>
+                </div>
+            </div>
+            <div id="story">
+                <img src="../assets/img/logo_white_shadow.png" alt="" class="lit-logo">
+                <div alt="" class="picture-container"></div>
+                <div class="safearea">
+                    <div class="catbadge"></div>
+                    <h1 class="banner-title"></h1>
                     <p>Leia em <b>litci.org</b></p>
                 </div>
             </div>
         </div>
+
     </main>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
     <script>
@@ -219,40 +287,51 @@ get_component('header');
                 .then(banners => {
                     banner = banners[0];
 
-                    img = document.getElementById('picture');
-                    img.style.backgroundImage = 'url(' + banner['fimg_url'] + ')';
+                    bannerOne = document.getElementById('bannerOne');
+                    bannerFour = document.getElementById('bannerFour');
+                    story = document.getElementById('story');
 
-                    category = banner['categories_names'][0]
-                    if (category === 'Destacado') {
-                        category = banner['categories_names'][1]
-                    }
-                    document.querySelector('.catbadge').innerHTML = category;
+                    places = [bannerOne, bannerFour, story];
 
-                    document.querySelector('#banner p b').innerText = 'litci.org/' + source;
+                    places.forEach(place => {
+                        img = place.querySelector('.picture-container');
+                        img.style.backgroundImage = 'url(' + banner['fimg_url'] + ')';
 
-                    h1 = document.getElementById('bannerTitle');
-                    title = banner['title']['rendered'];
-                    h1.innerHTML = title;
-                }).then(() => {
-                    const minHeight = 200;
-                    const maxHeight = 280;
-                    let fontSize = 72;
-
-                    function adjustFontSize() {
-                        h1.style.fontSize = fontSize + 'px';
-                        const h1Height = h1.offsetHeight;
-
-                        if (h1Height < minHeight) {
-                            fontSize++;
-                            adjustFontSize();
-                        } else if (h1Height > maxHeight) {
-                            fontSize--;
-                            adjustFontSize();
+                        category = banner['categories_names'][0]
+                        if (category === 'Destacado') {
+                            category = banner['categories_names'][1]
                         }
-                    }
-                    adjustFontSize();
+                        place.querySelector('.catbadge').innerHTML = category;
 
-                    createImage('banner', 'bannerPlace', 1080, 1350)
+                        place.querySelector('p b').innerText = 'litci.org/' + source;
+
+                        h1 = place.querySelector('.banner-title');
+                        title = banner['title']['rendered'];
+                        h1.innerHTML = title;
+
+                        const minHeight = 200;
+                        const maxHeight = 280;
+                        let fontSize = 72;
+
+                        function adjustFontSize() {
+                            h1.style.fontSize = fontSize + 'px';
+                            const h1Height = h1.offsetHeight;
+
+                            if (h1Height < minHeight) {
+                                fontSize++;
+                                adjustFontSize();
+                            } else if (h1Height > maxHeight) {
+                                fontSize--;
+                                adjustFontSize();
+                            }
+                        }
+                        adjustFontSize();
+                    })
+
+                }).then(() => {
+                    createImage('bannerOne', 'bannerOnePlace', 1080, 1080)
+                    createImage('bannerFour', 'bannerFourPlace', 1080, 1350)
+                    createImage('story', 'storyPlace', 1080, 1920)
                 })
         }
 

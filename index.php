@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/socialhub/autoload.php'))
 {
     include($_SERVER['DOCUMENT_ROOT'] . '/socialhub/autoload.php');
@@ -237,4 +237,4 @@ get_component('header');
             alert('Texto copiado para o clipboard!');
         }
     </script>
-</body>
+</body> -->
