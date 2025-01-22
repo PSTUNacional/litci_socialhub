@@ -279,9 +279,11 @@ get_component('header');
                         renderBanner(e.target.value);
                     });
                 })
+                .then(()=>{
+                    renderBanner(document.querySelector('#postSelector').value);
+                })
         }
         fetchPosts();
-        renderBanner(document.querySelector('#postSelector').value);
 
         function renderBanner(id) {
             postApi = api + '?include=' + id;
