@@ -114,7 +114,7 @@ get_component('header');
     }
 
     #bannerFourPlace,
-    #storyPlace{
+    #storyPlace {
         display: none;
     }
 
@@ -202,9 +202,9 @@ get_component('header');
                     <h4>Select a post to render a banner =)</h4>
                 </div>
                 <div style="display:flex; gap:12px;">
-                <button class="button primary" type="button" onclick="download('bannerOnePlace', 'LIT-Banner-Square')">Banner 1:1</button>
-                <button class="button primary" type="button" onclick="download('bannerFourPlace', 'LIT-Banner-FourByFive')">Banner 4:5</button>
-                <button class="button primary" type="button" onclick="download('storyPlace', 'LIT-Story')">Story</button>
+                    <button class="button primary" type="button" onclick="download('bannerOnePlace', 'LIT-Banner-Square')">Banner 1:1</button>
+                    <button class="button primary" type="button" onclick="download('bannerFourPlace', 'LIT-Banner-FourByFive')">Banner 4:5</button>
+                    <button class="button primary" type="button" onclick="download('storyPlace', 'LIT-Story')">Story</button>
                 </div>
             </div>
         </div>
@@ -241,138 +241,111 @@ get_component('header');
     </main>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
     <script>
-        const bannerPlace = document.getElementById('bannerPlace')
+        const bannerPlace = document.getElementById('bannerPlace');
         let source = 'pt';
         let cta = 'Leia em <b>litci.org</b>';
+
+        // Atualiza a fonte selecionada
         document.getElementById('sourceSelector').addEventListener('change', (e) => {
             source = e.target.value;
             fetchPosts();
         });
 
-        function fetchPosts() {
-            switch (source) {
-                case 'pt':
-                    api = 'https://litci.org/pt/wp-json/wp/v2/posts';
-                    cta = 'Leia em <b>litci.org/pt</b>';
-                    break;
-                case 'es':
-                    api = 'https://litci.org/es/wp-json/wp/v2/posts';
-                    cta = 'Lea en <b>litci.org/es</b>';
-                    break;
-                default:
-                    api = 'https://litci.org/pt/wp-json/wp/v2/posts';
-            }
-            fetch(api)
-                .then(response => response.json())
-                .then(data => {
-                    const postlist = document.getElementById('postSelector');
-                    postlist.innerHTML = '';
-                    data.forEach(post => {
-                        const opt = document.createElement('option');
-                        opt.value = post.id;
-                        opt.innerText = post.title.rendered;
-                        postlist.appendChild(opt);
-                    });
-                })
-                .then(() => {
-                    bannerList = document.getElementById('postSelector').addEventListener('change', (e) => {
-                        renderBanner(e.target.value);
-                    });
-                })
-                .then(()=>{
-                    renderBanner(document.querySelector('#postSelector').value);
-                })
+        async function fetchPosts() {
+            const api = getApiSource(source);
+            const posts = await fetch(api).then(response => response.json());
+            const postlist = document.getElementById('postSelector');
+            postlist.innerHTML = '';
+
+            posts.forEach(post => {
+                const opt = document.createElement('option');
+                opt.value = post.id;
+                opt.innerText = post.title.rendered;
+                postlist.appendChild(opt);
+            });
+
+            postlist.addEventListener('change', (e) => renderBanner(e.target.value));
+            renderBanner(postlist.value);
         }
-        fetchPosts();
 
-        function renderBanner(id) {
-            postApi = api + '?include=' + id;
-            fetch(postApi)
-                .then(response => response.json())
-                .then(banners => {
-                    banner = banners[0];
+        function getApiSource(source) {
+            switch (source) {
+                case 'es':
+                    cta = 'Lea en <b>litci.org/es</b>';
+                    return 'https://litci.org/es/wp-json/wp/v2/posts';
+                case 'pt':
+                default:
+                    cta = 'Leia em <b>litci.org/pt</b>';
+                    return 'https://litci.org/pt/wp-json/wp/v2/posts';
+            }
+        }
 
-                    bannerOne = document.getElementById('bannerOne');
-                    bannerFour = document.getElementById('bannerFour');
-                    story = document.getElementById('story');
+        async function renderBanner(id) {
+            const postApi = `${getApiSource(source)}?include=${id}`;
+            const banners = await fetch(postApi).then(response => response.json());
+            const banner = banners[0];
 
-                    places = [bannerOne, bannerFour, story];
+            const places = ['bannerOne', 'bannerFour', 'story'].map(id => document.getElementById(id));
+            places.forEach(place => {
+                const img = place.querySelector('.picture-container');
+                img.style.backgroundImage = `url(${banner.fimg_url})`;
 
-                    places.forEach(place => {
-                        img = place.querySelector('.picture-container');
-                        img.style.backgroundImage = 'url(' + banner['fimg_url'] + ')';
+                const category = banner.categories_names[0] === 'Destacado' ? banner.categories_names[1] : banner.categories_names[0];
+                place.querySelector('.catbadge').innerHTML = category;
 
-                        category = banner['categories_names'][0]
-                        if (category === 'Destacado') {
-                            category = banner['categories_names'][1]
-                        }
-                        place.querySelector('.catbadge').innerHTML = category;
+                const title = place.querySelector('.banner-title');
+                title.innerHTML = banner.title.rendered;
 
-                        place.querySelector('p').innerHTML = cta;
+                const minHeight = 200;
+                const maxHeight = 280;
+                let fontSize = 72;
+                adjustFontSize(title, fontSize, minHeight, maxHeight);
+            });
 
-                        h1 = place.querySelector('.banner-title');
-                        title = banner['title']['rendered'];
-                        h1.innerHTML = title;
+            ['bannerOne', 'bannerFour', 'story'].forEach((source, index) => {
+                createImage(source, `${source}Place`, index === 2 ? 1080 : 1350, 1080);
+            });
+        }
 
-                        const minHeight = 200;
-                        const maxHeight = 280;
-                        let fontSize = 72;
-
-                        function adjustFontSize() {
-                            h1.style.fontSize = fontSize + 'px';
-                            const h1Height = h1.offsetHeight;
-
-                            if (h1Height < minHeight) {
-                                fontSize++;
-                                adjustFontSize();
-                            } else if (h1Height > maxHeight) {
-                                fontSize--;
-                                adjustFontSize();
-                            }
-                        }
-                        adjustFontSize();
-                    })
-
-                }).then(() => {
-                    createImage('bannerOne', 'bannerOnePlace', 1080, 1080)
-                    createImage('bannerFour', 'bannerFourPlace', 1080, 1350)
-                    createImage('story', 'storyPlace', 1080, 1920)
-                })
+        function adjustFontSize(element, fontSize, minHeight, maxHeight) {
+            while (element.offsetHeight < minHeight && fontSize < 100) {
+                fontSize++;
+                element.style.fontSize = `${fontSize}px`;
+            }
+            while (element.offsetHeight > maxHeight && fontSize > 30) {
+                fontSize--;
+                element.style.fontSize = `${fontSize}px`;
+            }
         }
 
         function createImage(source, target, w, h) {
             html2canvas(document.getElementById(source), {
-                    allowTaint: true,
-                    useCORS: true,
-                    width: w,
-                    height: h,
-                    scale: 1
-                })
-                .then(canvas => {
-                    document.getElementById(target).innerHTML = ''
-                    canvas.style.width = "auto"
-                    canvas.style.height = "auto"
-                    document.getElementById(target).appendChild(canvas)
-                })
+                allowTaint: true,
+                useCORS: true,
+                width: w,
+                height: h,
+                scale: 1
+            }).then(canvas => {
+                const targetElement = document.getElementById(target);
+                targetElement.innerHTML = '';
+                canvas.style.width = "auto";
+                canvas.style.height = "auto";
+                targetElement.appendChild(canvas);
+            });
         }
 
         function download(source, name) {
-            canvas = document.getElementById(source).querySelector('canvas')
-            filename = name + '.png'
-            var dataURL = canvas.toDataURL('image/png');
-            // Create a temporary link element
-            var link = document.createElement('a');
+            const canvas = document.getElementById(source).querySelector('canvas');
+            const filename = `${name}.png`;
+            const dataURL = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
             link.href = dataURL;
             link.download = filename;
-
-            // Append the link to the document
             document.body.appendChild(link);
-
-            // Trigger the download by simulating a click
             link.click();
-
-            // Remove the link from the document
             document.body.removeChild(link);
         }
+
+        fetchPosts();
     </script>
 </body>
