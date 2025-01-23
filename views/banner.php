@@ -302,9 +302,9 @@ get_component('header');
                 adjustFontSize(title, fontSize, minHeight, maxHeight);
             });
 
-            ['bannerOne', 'bannerFour', 'story'].forEach((source, index) => {
-                createImage(source, `${source}Place`, 1080, index === 2 ? 1080 : 1350);
-            });
+                createImage(`bannerOne`, `bannerOnePlace`, 1080, 1080);
+                createImage(`bannerFour`, `bannerFourPlace`, 1080, 1350);
+                createImage(`story`, `storyPlace`, 1080, 1920);
         }
 
         function adjustFontSize(element, fontSize, minHeight, maxHeight) {
