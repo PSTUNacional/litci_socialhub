@@ -303,7 +303,7 @@ get_component('header');
             });
 
             ['bannerOne', 'bannerFour', 'story'].forEach((source, index) => {
-                createImage(source, `${source}Place`, index === 2 ? 1080 : 1350, 1080);
+                createImage(source, `${source}Place`, 1080, index === 2 ? 1080 : 1350);
             });
         }
 
