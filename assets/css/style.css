@@ -509,6 +509,112 @@ form.bulletin-generator input[type=radio]:checked+div {
 
 /*==================================================
 
+    TEXT
+
+==================================================*/
+
+.text-card {
+    padding: 24px;
+    border-radius: 8px;
+    max-width: 80%;
+    background-color: #c4f8be;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 460px;
+}
+
+.text-container {
+    display: flex;
+    gap: 48px;
+    justify-content: center;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.text-item {
+    max-width: 100%;
+    display: none;
+}
+
+.text-item.active {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+}
+
+form.text-generator input[type=radio] {
+    display: none;
+}
+
+form.text-generator .source-card div {
+    background-color: #fff0;
+    border: 1px solid #fff0;
+    border-radius: 4px;
+    padding: 8px;
+}
+
+form.text-generator input[type=radio]:checked+div {
+    background-color: var(--primary-5);
+    border: 1px solid var(--primary);
+}
+
+/*==================================================
+
+    LINKS
+
+==================================================*/
+
+.link-card {
+    padding: 24px;
+    border-radius: 8px;
+    max-width: 80%;
+    background-color: #c4f8be;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 460px;
+}
+
+.link-container {
+    display: flex;
+    gap: 48px;
+    justify-content: center;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.link-item {
+    max-width: 100%;
+    display: none;
+}
+
+.link-item.active {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+}
+
+form.link-generator input[type=radio] {
+    display: none;
+}
+
+form.link-generator .source-card div {
+    background-color: #fff0;
+    border: 1px solid #fff0;
+    border-radius: 4px;
+    padding: 8px;
+}
+
+form.link-generator input[type=radio]:checked+div {
+    background-color: var(--primary-5);
+    border: 1px solid var(--primary);
+}
+
+/*==================================================
+
     INPUTS
 
 ==================================================*/

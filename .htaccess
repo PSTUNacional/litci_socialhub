@@ -1,3 +1,6 @@
 RewriteEngine On
-RewriteRule ^banners$ /views/banner.php [L]
-RewriteRule ^bulletins$ /views/bulletin.php [L]
+
+# Se a requisição não for para um arquivo ou diretório real, redireciona para index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [L]

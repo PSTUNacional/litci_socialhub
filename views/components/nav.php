@@ -3,10 +3,16 @@
     <nav>
         <ul>
             <li>
-                <a href="bulletins" title="Bulletins"><i class="material-icons">list_alt</i> <span class="description" >Bulletins</span></a>
+                <a href="bulletins" title="Bulletins">
+                    <i class="material-icons">list_alt</i>
+                    <span class="description">Bulletins</span>
+                </a>
             </li>
             <li>
-                <a href="banners" title="Banners"><i class="material-icons">image</i><span class="description">Banners</span></a>
+                <a href="posts" title="Posts">
+                    <i class="material-icons">article</i>
+                    <span class="description">Posts</span>
+                </a>
             </li>
         </ul>
     </nav>
