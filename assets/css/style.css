@@ -57,6 +57,12 @@ main {
     overflow-y: scroll;
 }
 
+@media screen and (max-width: 720px) {
+    main {
+        margin-bottom: 64px;
+    }
+    
+}
 a,
 a:visited,
 a:active,
@@ -77,11 +83,32 @@ h1 {
     font-size: 3em;
 }
 
+h3{
+    font-size: 1.844rem;
+}
+
+.section-header{
+    width: 100%;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.section-header .info{
+    color: var(--gray-500);
+    font-size: 16px;
+    font-weight: 400;
+}
+
 .column {
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    gap: var(--gap);
+}
+
+.column.va-top{
+    justify-content: start;
 }
 
 .image {
@@ -115,7 +142,6 @@ h1 {
         display: flex;
         gap: var(--gap);
         flex-direction: column;
-        margin-bottom: 64px;
     }
     .sidemenu{
         height:fit-content;
@@ -639,4 +665,37 @@ select {
 .button.primary {
     background-color: var(--primary);
     color: #fff;
+}
+
+.button.secondary {
+    background-color: var(--gray-100);
+    color: var(--gray-500);
+}
+.button.secondary:hover {
+    background-color: var(--gray-200);
+    color: var(--gray-600);
+}
+
+.light-card{
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 0 0 0 #0001;
+    cursor: pointer;
+    transition: all .15s ease-in-out;
+    transform: translateY(0);
+    border: 1px solid var(--gray-100);
+    background-color: var(--white);
+}
+.light-card:hover{
+    box-shadow: 0 4px 8px 0 #0001;
+    transition: all .15s ease-in-out;
+    transform: translateY(-8px);
+    border: 1px solid var(--primary);
+}
+
+.light-card:active{
+    transition: all 0s ease-in-out;
+    box-shadow: 0 1px 3px 0 #0003;
+    transform: translateY(-2px);
+    background-color: var(--primary-5);
 }
