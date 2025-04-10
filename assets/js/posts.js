@@ -87,6 +87,68 @@ async function renderAll(post) {
     await renderLink(post.getAttribute('data-link'));
 }
 
+// Busca um post específico na api do site utilizando a slug
+async function fetchPostBySlug(site, slug) {
+    try {
+        const apiUrl = `${getApiSource(site)}?slug=${slug}`;
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error("Erro ao carregar o post com slug");
+        const posts = await response.json();
+        if (!posts.length) {
+            console.warn("Nenhum post encontrado para a slug fornecida.");
+            return null;
+        }
+        return posts[0];  // Retorna o primeiro (geralmente o único) post encontrado
+    } catch (error) {
+        console.error("Erro ao buscar post por slug:", error);
+        return null;
+    }
+}
+
+//Carrega os posts e lê a URL pra procurar parâmetros. Se tiver, carrega o texto
+document.addEventListener("DOMContentLoaded", async () => {
+    // Vincula o listener para mudanças no select de posts
+    document.getElementById('postSelector').addEventListener('change', async (e) => {
+        const selectedOption = e.target.selectedOptions[0];
+        await renderAll(selectedOption);
+    });
+
+    // Carrega a lista completa de posts para preencher o menu (select)
+    await fetchPosts();
+
+    // Verifica se existem os parâmetros 'site' e 'slug' na URL
+    const params = new URLSearchParams(window.location.search);
+    const siteParam = params.get("site");
+    const slugParam = params.get("slug");
+
+    if (siteParam && slugParam) {
+        // Atualiza a variável global 'source' com o site passado na URL
+        source = siteParam;
+
+        // Busca o post utilizando a função de busca por slug
+        const post = await fetchPostBySlug(source, slugParam);
+        if (post) {
+            const postSelector = document.getElementById('postSelector');
+            // Procura se o post já existe no select
+            let option = postSelector.querySelector(`option[value="${post.id}"]`);
+            if (!option) {
+                // Caso não exista, cria uma nova opção e adiciona ao select
+                option = document.createElement('option');
+                option.value = post.id;
+                option.innerText = post.title.rendered;
+                option.setAttribute('data-link', post.link);
+                postSelector.appendChild(option);
+            }
+            // Atualiza a seleção para o post encontrado
+            postSelector.value = post.id;
+            // Renderiza o post específico, sobrescrevendo o post renderizado inicialmente (se houver)
+            await renderAll(option);
+        } else {
+            console.warn("Post com a slug fornecida não foi encontrado.");
+        }
+    }
+});
+
 //////////////////////////////////////////////////////////////
 //////////////////  BANNER  //////////////////
 //////////////////////////////////////////////////////////////
@@ -159,8 +221,6 @@ function download(source, name) {
     link.click();
     document.body.removeChild(link);
 }
-
-fetchPosts();
 
 //////////////////////////////////////////////////////////////
 //////////////////  TEXTO   //////////////////
