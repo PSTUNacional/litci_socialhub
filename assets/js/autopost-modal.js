@@ -30,6 +30,9 @@ async function renderCaptions(){
             break;
     }
 
+    place = document.getElementById('captions-list');
+    place.innerHTML = `<div class="loader"></div>`
+
     let link = document.querySelector('#postSelector option:checked').getAttribute('data-link') 
 
     fetch('/api/openai',{
@@ -100,6 +103,7 @@ async function saveTempImage(source) {
 }
 
 async function autoPostPublish() {
+    changeStep('step-3')
     let caption = document.querySelector('input[name="caption"]:checked').value;
     let link = document.querySelector('#postSelector option:checked').getAttribute('data-link');
     let account = document.querySelector('#step-1 input:checked').value;;
