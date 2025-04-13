@@ -1,6 +1,38 @@
 <?php
 
-define('ENV', 'prod');
+if (!defined('ENV_LOADED')) {
+    define('ENV_LOADED', true);
+
+    $dotenvPath = __DIR__ . '/src/Config/.env';
+
+    if (!file_exists($dotenvPath)) {
+        die('Arquivo .env não encontrado.');
+    }
+
+    $lines = file($dotenvPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        $line = trim($line);
+
+        if ($line === '' || str_starts_with($line, '#')) {
+            continue; // Ignora linhas vazias e comentários
+        }
+
+        if (!str_contains($line, '=')) {
+            continue; // Ignora linhas inválidas
+        }
+
+        [$name, $value] = explode('=', $line, 2);
+        $name = trim($name);
+        $value = trim($value, " \t\n\r\0\x0B\"'");
+
+        // Define as variáveis no ambiente
+        putenv("$name=$value");
+        $_ENV[$name] = $value;
+        $_SERVER[$name] = $value;
+    }
+}
+
+
 
 spl_autoload_register(function ($class) {
     $path = str_replace('\\', '/', $class);

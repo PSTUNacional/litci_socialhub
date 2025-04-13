@@ -11,6 +11,9 @@ get_component('header');
     <?php get_component('nav'); ?>
 
     <main>
+        <div id="modal-container">
+            <?php include($_SERVER['DOCUMENT_ROOT'] . '/views/components/autopost-modal.php'); ?>
+        </div>
         <div class="page-header">
             <h1>Banner Generator</h1>
         </div>
@@ -47,11 +50,15 @@ get_component('header');
                     </div>
                 </div>
                 <div class="column va-top">
+                    <div class="autopost" style="display:none">
+                        <h4>Automatic post in social media?</h4>
+                        <button type="button" class="button primary" onclick="autoPostStart()">Auto-post</button>
+                    </div>
                     <h3 class="section-header">Banner</h3>
                     <div style="display:flex; gap:12px;">
-                        <button class="button primary" type="button" onclick="download('bannerOnePlace', 'LIT-Banner-Square')">Banner 1:1</button>
-                        <button class="button primary" type="button" onclick="download('bannerFourPlace', 'LIT-Banner-FourByFive')">Banner 4:5</button>
-                        <button class="button primary" type="button" onclick="download('storyPlace', 'LIT-Story')">Story</button>
+                        <button class="button secondary" type="button" onclick="download('bannerOnePlace', 'LIT-Banner-Square')">Banner 1:1</button>
+                        <button class="button secondary" type="button" onclick="download('bannerFourPlace', 'LIT-Banner-FourByFive')">Banner 4:5</button>
+                        <button class="button secondary" type="button" onclick="download('storyPlace', 'LIT-Story')">Story</button>
                     </div>
                     <h3 class="section-header">Excerpt <span class="info">Click to copy</span></h3>
                     <div class="text-item active">
@@ -113,4 +120,5 @@ get_component('header');
 
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
     <script src="/assets/js/posts.js"></script>
+    <script src="/assets/js/autopost-modal.js"></script>
 </body>

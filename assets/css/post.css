@@ -141,20 +141,6 @@ select {
     border: 1px solid var(--gray-300);
 }
 
-.button {
-    height: 40px;
-    padding: 12px 24px;
-    border-radius: 8px;
-    border: none;
-    outline: none;
-    cursor: pointer;
-}
-
-.button.primary {
-    background-color: var(--primary);
-    color: #fff;
-}
-
 section.main-container {
     display: flex;
     gap: var(--gap);
@@ -169,6 +155,41 @@ section.main-container .content {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+}
+
+.autopost{
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--gray-100);
+    padding: 8px 8px 8px 16px;
+    border-radius: 8px;
+    color: var(--gray-800);
+    align-items: center;
+}
+
+#autopost-modal{
+    width: 100%;
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
+
+#captions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;    
+
+}
+#captions-list .card-selector-content{
+    padding: 16px;
+    align-items: center;
+    display: flex;
+    gap: 16px;
+}
+
+#captions-list .card-selector-content .icon{
+    position: relative;
 }
 
 @media only screen and (max-width:1200px) {
