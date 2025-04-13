@@ -34,10 +34,12 @@ class InstagramService
 
         if (isset($result['id'])) {
             $mediaId = $result['id'];
-            echo "Container criado: $mediaId\n";
         } else {
-            echo "Erro ao criar container:\n";
-            print_r($result);
+            return [
+                'status' => 'error',
+                'message' => 'Erro ao criar o container.',
+                'details' => $result
+            ];
             exit;
         }
 

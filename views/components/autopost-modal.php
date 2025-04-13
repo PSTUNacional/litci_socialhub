@@ -31,5 +31,11 @@
                 <button type="button" class="button primary" onclick="autoPostPublish()">Publish</button>
             </div>
         </fieldset>
+        <fieldset id="step-3">
+            <div style="display:flex; flex-direction:column; align-items:center; width:100%; height: 240px; justify-content:center;">
+            <h3>Posting...</h3>
+            <div class="loader"></div>
+            </div>
+        </fieldset>
     </form>
 </div>
