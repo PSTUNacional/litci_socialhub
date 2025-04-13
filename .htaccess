@@ -1,4 +1,12 @@
+<Files ".env">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
 RewriteEngine On
+
+# API Routes
+RewriteRule ^api/openai$ src/Controller/OpenAiController.php [QSA,L]
 
 # Se a requisição não for para um arquivo ou diretório real, redireciona para index.php
 RewriteCond %{REQUEST_FILENAME} !-f
