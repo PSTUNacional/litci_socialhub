@@ -123,6 +123,7 @@ async function autoPostPublish() {
     })
     .then(response => response.json())
     .then(result => {
+        openModal()
         if (result.status) {
             alert('Postagem agendada com sucesso!');
         } else {
