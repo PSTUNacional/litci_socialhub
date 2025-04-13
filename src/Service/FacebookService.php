@@ -1,6 +1,7 @@
 <?php
 
 namespace SH\Service;
+
 class FacebookService
 {
     public function postMessage($pageId, $token, $message, $link = null)
@@ -41,4 +42,6 @@ class FacebookService
                 'message' => 'Erro ao publicar no Facebook.',
                 'details' => $result
             ];
+        }
     }
+}
