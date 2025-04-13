@@ -815,3 +815,22 @@ select {
 #modal-container.active {
     display: flex;
 }
+
+/*==================================================
+
+    LOADER
+
+==================================================*/
+
+.loader {
+    width: 64px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 8px solid var(--gray-100);
+    border-right-color: var(--primary);
+    animation: l2 1s infinite linear;
+    margin-top: 48px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  @keyframes l2 {to{transform: rotate(1turn)}}
