@@ -28,7 +28,7 @@
             <div id="captions-list"></div>
             <div class="actions" style="justify-content: space-between;">
                 <button type="button" class="button secondary" onclick="changeStep('step-1')">Previous</button>
-                <button type="button" class="button primary" onclick="changeStep('step-3')">Publish</button>
+                <button type="button" class="button primary" onclick="autoPostPublish()">Publish</button>
             </div>
         </fieldset>
     </form>
