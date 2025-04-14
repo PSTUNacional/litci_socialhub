@@ -11,8 +11,8 @@
                         <h4>Facebook and Instagram Spanish</h4>
                     </div>
                 </label>
-                <label for="account-portuguese" class="card-selector">
-                    <input type="radio" name="accounts" id="account-portuguese" value="pt" checked>
+                <label for="account-portuguese" class="card-selector" style="display:none">
+                    <input type="radio" name="accounts" id="account-portuguese" value="pt">
                     <div class="card-selector-content">
                         <span class="icon"><i class="material-icons">check_circle</i></span>
                         <h4>Facebook and Instagram Portuguese</h4>
@@ -32,10 +32,23 @@
             </div>
         </fieldset>
         <fieldset id="step-3">
-            <div style="display:flex; flex-direction:column; align-items:center; width:100%; height: 240px; justify-content:center;">
-            <h3>Posting...</h3>
-            <div class="loader"></div>
+            <div id="loader">
+                <h3>Posting...</h3>
+                <div class="loader"></div>
             </div>
+            <div id="result">
+                <h3></h3>
+                <div class="facebook" style="display:none">
+                    <b>Facebook</b>
+                    <p class="result"></p>
+                </div>
+                <div class="instagram" style="display:none">
+                    <b>Instagram</b>
+                    <p class="result"></p>
+                </div>
+            </div>
+            <div class="actions">
+            <button type="button" class="button primary" onclick="openModal()">Close</button>
         </fieldset>
     </form>
 </div>
