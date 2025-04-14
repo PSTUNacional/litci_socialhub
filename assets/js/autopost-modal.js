@@ -63,10 +63,27 @@ async function renderCaptions(){
             `
             place.appendChild(card)
         })
+
+        // Add custom caption option
+        card = document.createElement('label')
+        card.classList.add('card-selector')
+        card.classList.add('custom')
+        card.innerHTML = `
+            <input type="radio" name="caption" value="custom" />
+                <div class="card-selector-content">
+                <div style="display:flex; gap:16px; align-items:center;">
+                    <span class="icon"><i class="material-icons">check_circle</i></span>
+                    <p>Custom caption</p>
+                    </div>
+                    <textarea id="custom-caption" style="width:100%; padding: 8px" rows="5" placeholder="Write your caption here..."></textarea>
+                </div>
+            `
+        place.appendChild(card)
+
+        // Select first caption by default
         place.querySelector('input').checked = true;
       })
       .catch(error => console.error('Erro na requisição:', error));
-
 }
 
 function autoPostStart()
@@ -103,11 +120,23 @@ async function saveTempImage(source) {
 }
 
 async function autoPostPublish() {
+
+    // Set Loader
+    let loader = document.querySelector('#step-3 #loader');
+    loader.style.display = 'flex';
     changeStep('step-3')
-    let caption = document.querySelector('input[name="caption"]:checked').value;
+
+    
     let link = document.querySelector('#postSelector option:checked').getAttribute('data-link');
     let account = document.querySelector('#step-1 input:checked').value;;
-    let imageUploaded = await saveTempImage('bannerOnePlace');
+    let imageUploaded = await saveTempImage('bannerFourPlace');
+    let caption = document.querySelector('#captions-list input:checked').value;
+    if (caption == 'custom') {
+        caption = document.querySelector('#custom-caption').value;
+    }
+
+    let facebook = true
+    let instagram = true
 
     if(!imageUploaded) {
         alert('Erro ao enviar imagem temporária.');
@@ -116,8 +145,8 @@ async function autoPostPublish() {
 
     formData = new FormData();
     formData.append('account', account)
-    formData.append('facebook', true)
-    formData.append('instagram', true)
+    formData.append('facebook', facebook)
+    formData.append('instagram', instagram)
     formData.append('caption', caption)
     formData.append('link', link)
 
@@ -127,15 +156,24 @@ async function autoPostPublish() {
     })
     .then(response => response.json())
     .then(result => {
-        openModal()
-        if (result.status) {
-            alert('Postagem agendada com sucesso!');
+        // Hide loader
+        loader.style.display = 'none';
+        let resultContainer = document.querySelector('#step-3 #result');
+        resultContainer.style.display = 'flex';
+        document.querySelector('#step-3 .actions').style.display = 'flex';
+        
+        if (result.facebook.status == 'success'|| result.instagram.status == 'success') {
+            document.querySelector('#step-3 #result h3').innerText = 'Post published successfully!';
+        } else if (result.facebook.status == 'error'|| result.instagram.status == 'error'){
+            document.querySelector('#step-3 #result h3').innerText = 'Post not published =/';
         } else {
-            alert('Erro ao agendar postagem.');
+            document.querySelector('#step-3 #result h3').innerText = 'Post published partially';
         }
+
+        facebook ? document.querySelector('#step-3 #result .facebook').style.display = 'block' : '';
+        instagram ? document.querySelector('#step-3 #result .instagram').style.display = 'block' : '';
+
+        document.querySelector('#step-3 #result .facebook p').innerText = result.facebook.message;
+        document.querySelector('#step-3 #result .instagram p').innerText = result.instagram.message;
     })
-    .catch(error => {
-        console.error('Erro ao enviar imagem:', error);
-        alert('Erro ao agendar postagem.');
-    });
 }

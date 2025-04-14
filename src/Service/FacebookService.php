@@ -16,7 +16,7 @@ class FacebookService
         ];
 
         if ($link) {
-            $data['link'] = $link;
+            $data['link'] = $link . '?utm_source=facebook&utm_medium=post&utm_campaign=automation';
         }
 
 

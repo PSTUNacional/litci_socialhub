@@ -50,7 +50,7 @@ get_component('header');
                     </div>
                 </div>
                 <div class="column va-top">
-                    <div class="autopost" style="display:none">
+                    <div class="autopost">
                         <h4>Automatic post in social media?</h4>
                         <button type="button" class="button primary" onclick="autoPostStart()">Auto-post</button>
                     </div>
