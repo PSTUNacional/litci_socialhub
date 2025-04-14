@@ -90,9 +90,15 @@
     color: #fff;
 }
 
-p {
+#hidden p {
     font-weight: 100;
     color: #fff9
+}
+
+p{
+    font-weight: 100;
+    color:var(--gray-950);
+    line-height: 1.5;
 }
 
 p b {
@@ -157,7 +163,7 @@ section.main-container .content {
     gap: 8px;
 }
 
-.autopost{
+.autopost {
     display: flex;
     justify-content: space-between;
     background-color: var(--gray-100);
@@ -167,7 +173,7 @@ section.main-container .content {
     align-items: center;
 }
 
-#autopost-modal{
+#autopost-modal {
     width: 100%;
     max-width: 560px;
     display: flex;
@@ -178,18 +184,50 @@ section.main-container .content {
 #captions-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;    
+    gap: 8px;
 
 }
-#captions-list .card-selector-content{
+
+#captions-list .card-selector-content {
     padding: 16px;
     align-items: center;
     display: flex;
     gap: 16px;
 }
 
-#captions-list .card-selector-content .icon{
+#step-3 #loader {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 240px;
+    justify-content: center;
+}
+
+#step-3 #result {
+    display: flex;
+    padding: var(--gap);
+    gap: var(--gap);
+    flex-direction: column;
+}
+
+#captions-list .card-selector-content .icon {
     position: relative;
+}
+
+#captions-list .card-selector.custom .card-selector-content {
+    flex-direction: column;
+    gap: 16px;
+    align-items: start;
+}
+
+#captions-list .card-selector.custom textarea {
+    display: none;
+    resize: vertical;
+}
+
+#captions-list .card-selector.custom input[type=radio]:checked+.card-selector-content textarea {
+    display: block;
 }
 
 @media only screen and (max-width:1200px) {
