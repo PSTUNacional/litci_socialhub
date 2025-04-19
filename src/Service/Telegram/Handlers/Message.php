@@ -1,18 +1,35 @@
 <?php
 
-namespace SH\Service;
+namespace SH\Service\Telegram\Handlers;
 
-class TelegramService
+class Message
 {
+
     private string $apiToken;
 
-    public function __construct()
+    public function __construct(private ?array $update = null)
     {
         $this->apiToken = getenv('TELEGRAM_API');
 
         if (!$this->apiToken) {
             throw new \RuntimeException('TELEGRAM_API not set in environment variables');
         }
+    }
+
+    public function getChatId(): int
+    {
+        return $this->update['message']['chat']['id'];
+    }
+
+    public function getText(): string
+    {
+        return $this->update['message']['text'] ?? '';
+    }
+
+    public function reply(string $text): void
+    {
+        file_get_contents("https://api.telegram.org/bot" . getenv('TELEGRAM_API') .
+            "/sendMessage?chat_id=" . $this->getChatId() . "&text=" . urlencode($text));
     }
 
     /**
@@ -25,7 +42,7 @@ class TelegramService
      * @param string $label Texto clicável do link (opcional)
      * @return array Resposta da API do Telegram
      */
-    public function sendMessage(int|string $chatId, string $text, ?string $url = null, string $label = 'Clique aqui'): array
+    public function sendMessage(int|string $chatId, string $text, ?string $url = null, ?string $label = 'Clique aqui', $keyboard = null): array
     {
         $urlApi = "https://api.telegram.org/bot{$this->apiToken}/sendMessage";
 
@@ -38,6 +55,10 @@ class TelegramService
             'text'       => $text,
             'parse_mode' => $url ? 'Markdown' : null,
         ];
+
+        if ($keyboard) {
+            $data['reply_markup'] = json_encode($keyboard);
+        }
 
         // Remover valores nulos
         $data = array_filter($data, fn($v) => $v !== null);
