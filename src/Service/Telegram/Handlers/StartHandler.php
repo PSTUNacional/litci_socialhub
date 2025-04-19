@@ -10,9 +10,15 @@ class StartHandler
         $message->reply($text);
 
         $keyboard = [
-            'keyboard' => [
-                [['text' => 'Opção 1'], ['text' => 'Opção 2']],
-                [['text' => 'Opção 3'], ['text' => 'Opção 4']],
+            'inline_keyboard' => [
+                [
+                    ['text' => 'Opção 1', 'callback_data' => '/boletim'],
+                    ['text' => 'Opção 2', 'callback_data' => '/publicar'],
+                ],
+                [
+                    ['text' => 'Opção 3', 'callback_data' => '/ajuda'],
+                    ['text' => 'Opção 4', 'callback_data' => '/sobre'],
+                ],
             ],
             'resize_keyboard' => true,
             'one_time_keyboard' => true,

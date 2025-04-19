@@ -18,7 +18,11 @@ class TelegramService
         $message = new Message();
         return $message->sendImage($chatId, $imageUrl, $caption);
     }
-    
+
+    /**
+     * This is the decision tree handler
+     */
+
     public function dispatch(array $update): void
     {
         $message = new Message($update);
