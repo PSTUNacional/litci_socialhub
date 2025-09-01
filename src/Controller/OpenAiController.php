@@ -29,12 +29,20 @@ if ($method === "createcaptions") {
 
         // Se já for JSON, apenas envie
         echo $response;
-    } else {
-        badRequest("Invalid content-type value.");
     }
 
-} else {
-    badRequest("Invalid method.");
+}
+
+if ($method === 'createCarousel')
+{
+    $content= $_POST['content'];
+    if (!$content) {
+        badRequest("Parameter 'content' is missing.");
+    }
+    
+    $response = $openai->createCarousel($content);
+    
+    echo $response;
 }
 
 function badRequest($message)
