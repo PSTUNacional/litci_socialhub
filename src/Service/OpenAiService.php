@@ -44,7 +44,7 @@ class OpenAiService
         $endpoint = "https://api.openai.com/v1/chat/completions";
 
         $postData = [
-            "model" => "gpt-3.5-turbo",
+            "model" => "gpt-4.1-mini",
             "messages" => [
                 ["role" => "system", "content" => "Você é um especialista em redes sociais."],
                 ["role" => "user", "content" => $prompt],
@@ -68,5 +68,71 @@ class OpenAiService
         curl_close($ch);
 
         return json_decode($response, true);
+    }
+
+    public function createCarousel($url)
+    {
+        $prompt = <<<PROMPT
+                    Quero criar um carrossel para Instagram baseado em um texto que vou fornecer. O carrossel deve ter a seguinte estrutura detalhada para cada slide:
+
+                    Slide 1: Capa Impactante
+                    Chapéu/Editoria: Uma única palavra.
+                    Título: Com 3 a 7 palavras, curto e impactante.
+                    Parágrafo: Curto, introduzindo e cativando o interesse do usuário.
+
+                    Slide 2: Introdução Chamativa
+                    Chapéu: Uma única palavra.
+                    Título: Com 3 a 7 palavras.
+                    Parágrafo: Desenvolvendo a introdução do assunto com aproximadamente 270 caracteres.
+
+                    Slide 3: Contexto - Parte 1
+                    Chapéu: Uma única palavra.
+                    Parágrafo: Adicionando contexto ao conteúdo com aproximadamente 270 caracteres.
+
+                    Slide 4: Contexto - Parte 2
+                    Título: Com 3 a 7 palavras.
+                    Parágrafo: Curtíssimo, complementando o contexto com aproximadamente 150 caracteres.
+
+                    Slide 5: (Reservado)
+                    Este slide será deixado em branco ou aguardando instruções futuras sobre seu conteúdo.
+
+                    Slide 6: Conteúdo Principal - Parte 1
+                    Chapéu: Uma única palavra.
+                    Título: Com 3 a 7 palavras.
+                    Parágrafo: Apresentando o cerne da discussão, a parte mais forte do texto com aproximadamente 270 caracteres.
+
+                    Slide 7: Conteúdo Principal - Parte 2
+                    Chapéu: Uma única palavra.
+                    Parágrafo: Concluindo a discussão principal com um texto direto com aproximadamente 270 caracteres.
+
+                    Slide 8: Conclusão/Chamada
+                    Chapéu: Uma única palavra.
+                    Título: Com 3 a 7 palavras.
+                    Parágrafo: Sumarizando ou preparando para a frase de impacto com aproximadamente 270 caracteres.
+
+                    Slide 9 (ou Último Slide):
+                    Frase de Impacto Uma frase final de impacto para fechamento.
+
+                    O tom do carrossel deve ser crítico, informativo e polêmico, alinhado com um público de 18 a 35 anos, com baixa formação acadêmica, mas interessado em política e questões contemporâneas. O conteúdo deve evitar ser meramente conjuntural e focar em debates estratégicos e estruturais. 
+
+                    Retorne estritamente um JSON contendo os slides na seguinte forma:
+                    slide1: {
+                        headline: string ou null se for vazio,
+                        title: string ou null se for vazio,
+                        paragraph: 'string ou null se for vazio
+                    }
+
+                    Aqui está o texto base para o carrossel: $url
+        PROMPT;
+
+        $response = $this->chatWithGpt($prompt);
+        $content = $response['choices'][0]['message']['content'];
+
+        if (!isset($content)) {
+            throw new Exception("Resposta inesperada da OpenAI.");
+        }
+        
+        return $content;
+       
     }
 }

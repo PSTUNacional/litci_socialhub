@@ -14,6 +14,12 @@
                     <span class="description">Posts</span>
                 </a>
             </li>
+            <li>
+                <a href="carousels" title="Carousels">
+                    <i class="material-icons">article</i>
+                    <span class="description">Carousels</span>
+                </a>
+            </li>
         </ul>
     </nav>
 </aside>

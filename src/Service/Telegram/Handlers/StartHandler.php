@@ -9,6 +9,7 @@ class StartHandler
         $text = "Bem-vindo ao assistente!";
         $message->reply($text);
 
+
         $keyboard = [
             'inline_keyboard' => [
                 [

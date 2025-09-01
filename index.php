@@ -2,6 +2,7 @@
 $routes = [
     'banners'    => 'views/banner.php',
     'bulletins'  => 'views/bulletin.php',
+    'carousels'  => 'views/carousel/index.php',
     'texts'      => 'views/text.php',
     'links'      => 'views/link.php',
     'posts'      => 'views/post.php',
