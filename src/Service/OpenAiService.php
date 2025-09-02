@@ -70,7 +70,7 @@ class OpenAiService
         return json_decode($response, true);
     }
 
-    public function createCarousel($url)
+    public function createCarousel($url, $language)
     {
         $prompt = <<<PROMPT
                     Quero criar um carrossel para Instagram baseado em um texto que vou fornecer. O carrossel deve ter a seguinte estrutura detalhada para cada slide:
@@ -90,6 +90,7 @@ class OpenAiService
                     Parágrafo: Adicionando contexto ao conteúdo com aproximadamente 270 caracteres.
 
                     Slide 4: Contexto - Parte 2
+                    Chapéu: Uma única palavra.
                     Título: Com 3 a 7 palavras.
                     Parágrafo: Curtíssimo, complementando o contexto com aproximadamente 150 caracteres.
 
@@ -111,9 +112,12 @@ class OpenAiService
                     Parágrafo: Sumarizando ou preparando para a frase de impacto com aproximadamente 270 caracteres.
 
                     Slide 9 (ou Último Slide):
-                    Frase de Impacto Uma frase final de impacto para fechamento.
+                    Título: o título original da matéria
+                    Parágrafo: Frase de Impacto Uma frase final de impacto para fechamento.
 
                     O tom do carrossel deve ser crítico, informativo e polêmico, alinhado com um público de 18 a 35 anos, com baixa formação acadêmica, mas interessado em política e questões contemporâneas. O conteúdo deve evitar ser meramente conjuntural e focar em debates estratégicos e estruturais. 
+
+                    O texto deve ser escrito em $language
 
                     Retorne estritamente um JSON contendo os slides na seguinte forma:
                     slide1: {

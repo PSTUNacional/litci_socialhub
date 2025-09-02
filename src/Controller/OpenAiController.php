@@ -39,9 +39,11 @@ if ($method === 'createCarousel')
     if (!$content) {
         badRequest("Parameter 'content' is missing.");
     }
+
+    $language = $_POST['language'] ?? 'spanish';
     
-    $response = $openai->createCarousel($content);
-    
+    $response = $openai->createCarousel($content, $language);
+
     echo $response;
 }
 

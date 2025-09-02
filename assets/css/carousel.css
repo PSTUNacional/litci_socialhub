@@ -94,6 +94,15 @@
     padding-bottom: 24px;
     align-items: end;
     font-weight: 500;
+    position: relative;
+}
+
+.header img{
+    max-height: 80%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .slide-item .header span {
@@ -135,8 +144,7 @@
     gap: 4px;
 }
 
-#carousel-container h1,
-#carousel-container #slide9 h1 {
+#carousel-container h1 {
     font-size: 96px;
     font-weight: 900;
     color: var(--black);
@@ -217,6 +225,13 @@
     background-color: var(--main-dark);
 }
 
+
+.ogimage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 /*============================
 
             SLIDES
@@ -233,7 +248,6 @@
     text-transform: uppercase;
     color: var(--white);
     background-color: var(--main-color);
-    letter-spacing: 50%;
     padding: 8px 64px;
     border-radius: 24px;
     width: fit-content;
@@ -256,12 +270,6 @@
     z-index: -1;
 }
 
-#slide1 .ogimage img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-
-}
 
 /*===== SLIDE 2 =====*/
 #slide2 .middle h1 {
@@ -283,12 +291,12 @@
 }
 
 #slide3 .headline,
-#slide7 .headline {
+#slide7 .headline,
+#slide9 .headline {
     font-size: 24px;
     text-transform: uppercase;
     color: var(--main-color);
     background-color: var(--white);
-    letter-spacing: 50%;
     padding: 8px 64px;
     border-radius: 24px;
     width: fit-content;
@@ -351,7 +359,7 @@
     margin-bottom: 128px;
 }
 
-#slide4 #bigArrow{
+#slide4 #bigArrow {
     margin-left: 720px;
 }
 
@@ -376,31 +384,72 @@
     color: var(--black)
 }
 
+/*===== SLIDE 6 =====*/
+#slide6 .middle{
+    text-align: center;
+}
+
 /*===== SLIDE 9 =====*/
 #slide9 .next {
     display: none;
 }
 
 #slide9 {
-    background: linear-gradient(135deg, hsl(var(--hue), 50%, 80%), hsl(var(--hue), 80%, 50%), hsl(var(--hue), 100%, 30%));
+    background: linear-gradient(180deg, hsl(var(--hue), 50%, 90%) 0%, hsl(var(--hue), 72%, 50%) 50%, hsl(var(--hue), 100%, 18%) 100%);
+    color: var(--white);
+    align-items: center;
+    text-align: center;
+}
+
+#slide9 .middle{
+    justify-content: end;
+    align-items: center;
+    padding-bottom: 264px;
+}
+
+#slide9 .middle p{
+    font-size: 1.5em;
+    font-weight: 500;
+    background-color: var(--main-light);
+    padding: 24px 100px;
+    margin: 0 -100px;
+    text-align: center;
+    color: var(--main-dark);
+}
+
+#slide9 .footer{
+    border-color: var(--white);
+    margin-top: calc(100% + 135px);
+    justify-content: center;
+}
+
+#slide9 .header{
+    display: none;
+}
+
+#slide9 .middle .title{
+    order: 4;
+    font-size: 56px;
     color: var(--white);
 }
 
-#slide9 h1 {
-    color: var(--white);
+#slide9 .middle .headline{
+    order: 3;
 }
 
-#slide9 .ogimage{
-    width: 100%;
-    height: 100%;
-    opacity: 0.15;
-    filter: grayscale(1);
+#slide9 .ogimage {
+    width: 1080px;
+    height: 300px;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
-#slide9 .ogimage img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+#slide9 .middle img {
+    width: fit-content;
+    height: 188px;
+    object-fit: contain;
+    order: 2
 }
 
 /*============================
@@ -437,4 +486,72 @@
     border: 1px solid #aaa;
     margin-bottom: 16px;
     font: inherit;
+}
+
+.hue-selector {
+    display: flex;
+    gap: var(--gap-small);
+}
+
+.hue-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hue-option input[type="radio"] {
+    display: none;
+}
+
+.hue-option label {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-block;
+    border: 2px solid #fff;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s;
+}
+
+.hue-option input[type="radio"]:checked+label {
+    transform: scale(1.2);
+    border: 2px solid var(--primary);
+    outline: 2px solid var(--primary-50);
+}
+
+.loader-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+    background-color: var(--gray-200);
+    justify-content: center;
+    align-items: center;
+    padding: var(--gap-large);
+    border-radius: var(--gap-small);
+}
+
+.loader-container #loadmessage {
+    color: var(--gray-600);
+    font-weight: 300;
+}
+
+.icons-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 202px));
+    gap: var(--gap);
+    position: absolute;
+    top:50%;
+    transform: translateY(-50%);
+    width: 100%;
+}
+
+.icons-container div {
+    padding: var(--gap-large);
+    border-radius: var(--gap);
+    background-color: hsl(var(--hue), 70%, 50%);
+}
+
+.icons-container svg {
+    fill: var(--main-light)
 }
