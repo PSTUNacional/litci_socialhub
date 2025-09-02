@@ -460,6 +460,10 @@ function setPageButtons() {
             if (form) {
                 // Alterna a classe 'active' apenas no formulário deste slide
                 form.classList.toggle('active');
+                form.scrollIntoView({
+                    behavior: 'smooth', // Adiciona uma animação de rolagem suave
+                    block: 'center'   // Alinha o slide no centro da tela
+                });
             }
         });
     });
