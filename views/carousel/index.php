@@ -62,8 +62,7 @@ get_component('header');
                 </div>
                 <div style="display:flex; gap: var(--gap-medium); flex-direction: row;">
                     <button class="button primary" role="button" onclick="renderCarousel()">Generate</button>
-                    <button class="button secondary" role="button" id="editText">Edit text</button>
-                    <button class="button primary" role="button" id="downloadAllBtn">Download All</button>
+                    <button class="button secondary" role="button" id="downloadAllBtn">Download All</button>
                 </div>
             </div>
             <div id="carousel-container">

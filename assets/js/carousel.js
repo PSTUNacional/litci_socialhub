@@ -67,7 +67,7 @@ const textForm = `<form id=s>
 
 // const bigArrow = `<div id="bigArrow" style="display:flex;align-items:center; width:440px; height:120px; margin-top:860px;"><div style="background-color:var(--main-dark); width:400px; height:80px"></div><div style="width:82px;height:120px;background-color:var(--main-dark);clip-path: polygon(0 0, 100% 50%, 0 100%);"></div></div>`
 
-const bigArrow =`<div class="bigArrow-container"><?xml version="1.0" encoding="UTF-8"?>
+const bigArrow = `<div class="bigArrow-container"><?xml version="1.0" encoding="UTF-8"?>
 <svg id="bigArrow" data-name="Camada 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 120">
   <polygon class="cls-1" points="440 60 360 0 360 20 0 20 0 100 360 100 360 120 440 60"/>
 </svg></div>`
@@ -449,12 +449,20 @@ function renderSlides(carouselContent, language) {
 ==================================*/
 
 function setPageButtons() {
-    document.getElementById('editText').addEventListener('click', () => {
-        document.querySelectorAll('.slide-form').forEach(el => {
-            el.classList.toggle('active')
-        })
-    })
+    // Adiciona evento de clique a cada slide-item
+    document.querySelectorAll('.slide-item').forEach(slide => {
+        slide.addEventListener('click', (e) => {
+            // e.stopPropagation() para evitar que o clique se propague
+            // para outros elementos, caso necessário
 
+            // Encontra o formulário correspondente ao slide clicado
+            const form = slide.closest('.slide-section').querySelector('.slide-form');
+            if (form) {
+                // Alterna a classe 'active' apenas no formulário deste slide
+                form.classList.toggle('active');
+            }
+        });
+    });
     document.querySelectorAll('#carousel-container input[type=text], #carousel-container textarea').forEach(el => {
         el.addEventListener('input', () => {
             const newValue = el.value;
@@ -634,7 +642,7 @@ async function processImagesWithObjectFit(element) {
     const promises = [];
 
     images.forEach(img => {
-        console.log('Rendering image: ',img)
+        console.log('Rendering image: ', img)
         // Check if the image has a computed style of object-fit: cover
         const style = window.getComputedStyle(img);
         if (style.objectFit === 'cover') {
@@ -703,7 +711,7 @@ async function createDataURLs(slides, w, h) {
 
         const canvas = await html2canvas(el, {
             allowTaint: true,
-            useCORS: true, 
+            useCORS: true,
             width: w,
             height: h,
             scale: 1
