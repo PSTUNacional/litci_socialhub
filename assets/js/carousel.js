@@ -351,7 +351,7 @@ function renderSlides(carouselContent, language) {
 
         currentElement = document.querySelector('#carousel-container .slide-section:last-child .slide-container .slide-item')
         currentElement.id = id
-        currentElement.style.transform = 'translate(-50%, -50%) scale(0.4)'
+        currentElement.style.transform = 'translate(-50%, -50%) scale(var(--scale))'
 
         renderFooter(site, next, siteCta, slide)
         renderHeader(instagram, slide)

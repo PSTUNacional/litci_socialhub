@@ -11,7 +11,7 @@
     --black: #333;
     --white: #fff;
 
-    --scale: 0.4;
+    --scale: 0.3;
     --mw: calc(1080 * var(--scale) * 1px);
     --mh: calc(1350 * var(--scale) * 1px);
 }
@@ -501,6 +501,8 @@
 .hue-selector {
     display: flex;
     gap: var(--gap-small);
+    flex-wrap: wrap;
+    width: 100%;
 }
 
 .hue-option {
