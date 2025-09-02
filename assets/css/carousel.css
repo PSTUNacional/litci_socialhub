@@ -359,8 +359,18 @@
     margin-bottom: 128px;
 }
 
-#slide4 #bigArrow {
+.bigArrow-container{
+    width: 440px;
+    height: 120px;
+    margin-top: 860px;
+}
+
+#slide4 .bigArrow-container{
     margin-left: 720px;
+}
+
+#bigArrow {
+    fill: var(--main-dark);
 }
 
 /*===== SLIDE 4 =====*/

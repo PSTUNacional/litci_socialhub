@@ -65,10 +65,12 @@ const textForm = `<form id=s>
                     <textarea type="text" name="headline" value=""></textarea>
                 </form>`
 
-const bigArrow = `<svg id="bigArrow" xmlns="http://www.w3.org/2000/svg" height="120" width="450" viewBox="0 0 440 120" style="margin-top:860px">
-                        <rect fill="var(--main-dark)" x="0" height="80" y="20" style="/*! opacity: 0.1; */" width="360"></rect>
-                        <polygon fill="var(--main-dark" points="360,0 440,60 360,120"></polygon>
-                    </svg>`
+// const bigArrow = `<div id="bigArrow" style="display:flex;align-items:center; width:440px; height:120px; margin-top:860px;"><div style="background-color:var(--main-dark); width:400px; height:80px"></div><div style="width:82px;height:120px;background-color:var(--main-dark);clip-path: polygon(0 0, 100% 50%, 0 100%);"></div></div>`
+
+const bigArrow =`<div class="bigArrow-container"><?xml version="1.0" encoding="UTF-8"?>
+<svg id="bigArrow" data-name="Camada 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 120">
+  <polygon class="cls-1" points="440 60 360 0 360 20 0 20 0 100 360 100 360 120 440 60"/>
+</svg></div>`
 /*==================================
 
     Functions
