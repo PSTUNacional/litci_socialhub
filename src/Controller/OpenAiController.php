@@ -47,6 +47,25 @@ if ($method === 'createCarousel')
     echo $response;
 }
 
+if ($method === 'createOpenCarousel')
+{
+    $content= $_POST['content'];
+    if (!$content) {
+        badRequest("Parameter 'content' is missing.");
+    }
+
+    $format= $_POST['format'];
+    if (!$format) {
+        badRequest("Parameter 'format' is missing.");
+    }
+
+    $language = $_POST['language'] ?? 'spanish';
+    
+    $response = $openai->createOpenCarousel($content, $format, $language);
+
+    echo $response;
+}
+
 function badRequest($message)
 {
     http_response_code(400);

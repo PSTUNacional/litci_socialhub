@@ -135,8 +135,149 @@ class OpenAiService
         if (!isset($content)) {
             throw new Exception("Resposta inesperada da OpenAI.");
         }
-        
+
         return $content;
-       
+    }
+
+    public function createOpenCarousel($content, $format, $language)
+
+    {
+
+        $formatMap = [
+            'conjuncture' => <<<PRODUCT
+                                Este carrossel deve capturar a atenção do público a partir de uma análise mais geral da realidade, e tentar convencer ele da nossa posição que está no texto do site lá em baixo.
+                                slide1: Exposição direta da tese,
+                                slide2: Explicar detalhes da nossa tese,
+                                slide3, 4 e 5: Cada slide tem um elemento da conjuntura, entre os mais importantes, que sustenta a nossa tese,
+                                slide6: Deixar em branco é só um CTA de engajamento,
+                                slide7: Todo texto se contrapõe a outro, ainda que de forma velada, então traga a visão que estamos nos diferenciando e explique por que ela está errada,
+                                slide8: Exposição direta da nossa conclusão sobre a conjuntura,
+                                slide9: Aqui, queremos aguçar uma curiosidade mais profunda no leitor que só se resolve lendo o texto no site.
+                                PRODUCT,
+
+            'process' => <<<PRODUCT
+                                Este carrossel deve capturar a atenção do público sobre uma pauta quente do momento e tentar convencer ele da nossa posição que está no texto do site lá em baixo.
+                                slide1: Exposição direta de qual o fato que mudou o processo que estamos lidando,
+                                slide2: Explicar melhor exatamente o que aconteceu e sobre o quê estamos nos posicionando,
+                                slide3, 4 e 5: Cada slide tem um elemento do processo analisado que sustenta a nossa conclusão,
+                                slide6: Deixar em branco é só um CTA de engajamento,
+                                slide7: Todo texto se contrapõe a outro, ainda que de forma velada, então traga a visão que estamos nos diferenciando e explique por que ela está errada,
+                                slide8: Exposição direta da nossa conclusão,
+                                slide9: Aqui, queremos aguçar uma curiosidade mais profunda no leitor que só se resolve lendo o texto no site.
+                                PRODUCT,
+            'history' => <<<PRODUCT
+                                Este carrossel deve capturar a atenção do público a partir de um fato histórico que possui um paralelo com o debate da nossa conjuntura. Se o texto do site já não estiver nesse formato, então haverá um texto adicional que ajudará a pensar esse paralelo.
+                                slide1: Exposição direta de qual o fato da história estamos lidando,
+                                slide2: Explicar melhor exatamente o que ocorreu no passado e qual lição estamos querendo extrair dele,
+                                slide3, 4 e 5: Cada slide tem um elemento da história que sustenta a nossa conclusão,
+                                slide6: Deixar em branco é só um CTA de engajamento,
+                                slide7: Exposição direta da nossa conclusão sobre o fato histórico,
+                                slide8: Paralelo com o presente, mostrando que nossa conclusão reforça (ou contradiz) o que está acontecendo,
+                                slide9: Aqui, queremos aguçar uma curiosidade mais profunda no leitor que só se resolve lendo o texto no site.
+                                PRODUCT,
+            'polemic' => <<<PRODUCT
+                                Este carrossel deve capturar a atenção do público a partir de uma polêmica com outra organização. Essa polêmica pode ser de divergência na política conjuntural, no programa ou na teoria. Se o texto do site já não estiver nesse formato, então haverá um texto adicional que ajudará a pensar esse paralelo.
+                                slide1: Exposição direta de qual a tese que estamos combatendo,
+                                slide2: Explicar melhor qual é essa tese deixando claro que somos contra,
+                                slide3, 4 e 5: Cada slide tem um argumento que sustenta a tese que consideramos errada, e nossa resposta a cada um deles,
+                                slide6: Deixar em branco é só um CTA de engajamento,
+                                slide7: Exposição direta de por que essa tese está errada, segundo a argumentação,
+                                slide8: Exposição da nossa tese alternativa a esse erro,
+                                slide9: Aqui, queremos aguçar uma curiosidade mais profunda no leitor que só se resolve lendo o texto no site.
+                                PRODUCT,
+
+            'news' => <<<PRODUCT
+                                Este carrossel deve capturar a atenção do público a partir de uma notícia que reforça uma análise feita em nosso site. Ao final, além do texto no site que contém a nossa análise, haverá um texto adicional com a notícia que devemos expor no carrossel.
+                                slide1: Manchete,
+                                slide2: Lide,
+                                slide3, 4 e 5: Cada slide tem um elemento de contexto, ou seja, outros fatos, que ajudam a dar sentido para a nossa notícia,
+                                slide6: Deixar em branco é só um CTA de engajamento,
+                                slide7: Reforço da nossa análise presente no texto do site,
+                                slide8: Reflexão que estimula a audiência a se fazer perguntas mais profundas,
+                                slide9: Aqui, queremos amarrar essa curiosidade mais profunda do leitor, indicando o texto do site que a resolve.
+                                PRODUCT,
+        ];
+
+        $formatFinal = $formatMap[$format];
+
+        $prompt = <<<PROMPT
+                    Objetivo
+                    Você vai criar um roteiro para carrossel do Instagram com base nos textos ao final. A ideia é capturar a atenção da audiência e despertar uma curiosidade mais profunda sobre a discussão no leitor, gerando a vontade de ir ao site ler o nosso texto completo. O roteiro deve ser escrito em $language
+
+                    ---
+
+                    Formato
+                    Retorne estritamente um JSON contendo os slides na seguinte forma:
+                    {
+                    "slide1": {
+                        "headline": "{{Uma única palavra}}",
+                        "title": "{{Título com 3 a 7 palavras, curto e impactante}}",
+                        "paragraph": "{{Parágrafo curto, introduzindo e cativando o interesse do usuário}}"
+                    },
+                    "slide2": {
+                        "headline": "{{Uma única palavra}}",
+                        "title": "{{Título com 3 a 7 palavras}}",
+                        "paragraph": "{{Introdução do assunto com aproximadamente 270 caracteres}}"
+                    },
+                    "slide3": {
+                        "headline": "{{Uma única palavra}}",
+                        "title": null,
+                        "paragraph": "{{Aproximadamente 270 caracteres}}"
+                    },
+                    "slide4": {
+                        "headline": "{{Uma única palavra}}",
+                        "title": "{{Título com 3 a 7 palavras}}",
+                        "paragraph": "{{Parágrafo curtíssimo, aproximadamente 150 caracteres}}"
+                    },
+                    "slide5": {
+                        "headline": "{{Uma única palavra}}",
+                        "title": "{{Título com 3 a 7 palavras}}",
+                        "paragraph": "{{Aproximadamente 270 caracteres}}"
+                    },
+                    "slide6": {
+                        "headline": null,
+                        "title": null,
+                        "paragraph": null
+                    },
+                    "slide7": {
+                        "headline": "{{Uma única palavra}}",
+                        "title": null,
+                        "paragraph": "{{Aproximadamente 270 caracteres}}"
+                    },
+                    "slide8": {
+                        "headline": "{{Uma única palavra}}",
+                        "title": "{{Título com 3 a 7 palavras}}",
+                        "paragraph": "{{Aproximadamente 270 caracteres}}"
+                    },
+                    "slide9": {
+                        "headline": null,
+                        "title": "{{Use aqui o título da matéria do site}}",
+                        "paragraph": "{{Escreva uma frase final de impacto para fechamento}}"
+                    }
+                    }
+
+                    Os slides devem conter o seguinte conteúdo:
+
+                    $formatFinal
+
+                    ---
+
+                    Aviso
+                    O tom do carrossel deve ser crítico, informativo e polêmico, alinhado com um público de 18 a 35 anos, com baixa formação acadêmica, mas interessado em política e questões contemporâneas e internacionais.
+
+                    ---
+
+                    Contexto
+                    Aqui está o texto do site para o carrossel: $content
+                PROMPT;
+
+        $response = $this->chatWithGpt($prompt);
+        $content = $response['choices'][0]['message']['content'];
+
+        if (!isset($content)) {
+            throw new Exception("Resposta inesperada da OpenAI.");
+        }
+
+        return $content;
     }
 }

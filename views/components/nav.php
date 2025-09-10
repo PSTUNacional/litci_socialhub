@@ -20,6 +20,12 @@
                     <span class="description">Carousels</span>
                 </a>
             </li>
+            <li>
+                <a href="opencarousel" title="Carousels">
+                    <i class="material-icons">article</i>
+                    <span class="description">Free Carousels</span>
+                </a>
+            </li>
         </ul>
     </nav>
 </aside>

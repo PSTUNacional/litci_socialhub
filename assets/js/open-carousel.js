@@ -1,4 +1,9 @@
-
+const debug = false
+function dd(message) {
+    if (debug == true) {
+        console.log(message)
+    }
+}
 
 /*==================================
 
@@ -15,24 +20,24 @@ let id;
 ==================================*/
 
 const placeholders = {
-    es: {
+    spanish: {
         site: 'www.litci.org/es',
         siteCta: 'Leer más en',
         instagram: '@lit.ci',
         next: 'Arrastra y lee',
-        slide5: {
+        slide6: {
             headline: 'Si este contenido\nte resulta útil',
             title: 'Aprovecha y síguenos',
             paragraph: 'Para no perderte los nuevos materiales',
         },
         finalCta: 'Leea o artíuclo completo:'
     },
-    pt: {
+    portuguese: {
         site: 'www.litci.org/pt',
         siteCta: 'Leia mais em:',
         instagram: '@litqi.oficial',
         next: 'Arraste e leia',
-        slide5: {
+        slide6: {
             headline: 'Se esse conteúdo\nfaz sentido para você',
             title: 'Aproveita e já segue a gente',
             paragraph: 'Para não perder os novos materiais'
@@ -56,16 +61,19 @@ const slideTemplate = ` <div class="slide-section">
             </div>
             </div>`
 
-const textForm = `<form>
-                    <label for="headline">Headline</label>
-                    <input type="text" name="headline" value="">
-                    <label for="title">Title</label>
-                    <input type="text" name="headline" value="">
-                    <label for="paragrpa">Paragraph</label>
-                    <textarea type="text" name="headline" value=""></textarea>
-                </form>`
+// const textForm = `<form>
+//                     <label for="headline">Headline</label>
+//                     <input type="text" name="headline" value="">
+//                     <label for="title">Title</label>
+//                     <input type="text" name="headline" value="">
+//                     <label for="paragrpa">Paragraph</label>
+//                     <textarea type="text" name="headline" value=""></textarea>
+//                     <div class="imageForm" style="display:none">
+//                     <label for="image">Imagem</label>
+//                     <input type="file" name="image" accept="image/*">
+//                     </div>
+//                 </form>`
 
-// const bigArrow = `<div id="bigArrow" style="display:flex;align-items:center; width:440px; height:120px; margin-top:860px;"><div style="background-color:var(--main-dark); width:400px; height:80px"></div><div style="width:82px;height:120px;background-color:var(--main-dark);clip-path: polygon(0 0, 100% 50%, 0 100%);"></div></div>`
 
 const bigArrow = `<div class="bigArrow-container"><?xml version="1.0" encoding="UTF-8"?>
 <svg id="bigArrow" data-name="Camada 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 120">
@@ -78,7 +86,7 @@ const bigArrow = `<div class="bigArrow-container"><?xml version="1.0" encoding="
 ==================================*/
 
 function insertComponent(component, place) {
-
+    dd('Creating component ' + component, debug)
     const target = document.querySelector(place);
     if (!target) {
         console.warn(`Elemento "${place}" não encontrado.`);
@@ -175,8 +183,9 @@ function insertBar(height, side, color, position, place) {
     target.appendChild(el)
 }
 
-function createForm(id, headline, title, size, paragraph) {
+function createForm(id, headline, title, size, paragraph, image = false) {
 
+    dd('Render slide ' + id, debug)
     headline = headline ? headline : null
     title = title ? title : null
     paragraph = paragraph ? paragraph : null
@@ -251,7 +260,38 @@ function createForm(id, headline, title, size, paragraph) {
         f.appendChild(paragraphTextarea);
     }
 
+
+    dd('Render form image ' + id, debug)
+    if (image) {
+        const imageLabel = document.createElement('label');
+        imageLabel.setAttribute('for', 'image-' + id);
+        imageLabel.innerText = 'Select a image';
+        f.appendChild(imageLabel)
+
+        const imageInput = document.createElement('input')
+        imageInput.name = 'imageInput';
+        imageInput.id = 'imageInput-' + id;
+        imageInput.type = 'file';
+        imageInput.accept = 'image/*';
+        f.appendChild(imageInput);
+
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const objectUrl = URL.createObjectURL(file);
+                changeImage(`${id}`, objectUrl)
+            }
+
+
+        });
+    }
+
     return f;
+}
+
+function changeImage(id, imageUrl) {
+    dd('Id on ChangeImage is: ' + id, debug)
+    document.querySelector(`#${id} .ogimage img`).src = imageUrl
 }
 
 function renderLargeIcons() {
@@ -323,7 +363,7 @@ function renderLargeIcons() {
         el.appendChild(i)
     })
 
-    document.querySelector('#slide5 .middle').appendChild(el)
+    document.querySelector('#slide6 .middle').appendChild(el)
 
 }
 /*==================================
@@ -338,7 +378,7 @@ function renderSlides(carouselContent, language) {
     instagram = placeholders[language]['instagram']
     next = placeholders[language]['next']
     siteCta = placeholders[language]['siteCta']
-    carouselContent['slide5'] = placeholders[language]['slide5']
+    carouselContent['slide6'] = placeholders[language]['slide6']
     carouselContent['slide9']['headline'] = placeholders[language]['finalCta']
 
     document.querySelector('#carousel-container').innerHTML = ''
@@ -369,7 +409,7 @@ function renderSlides(carouselContent, language) {
             insertComponent(el, '#' + slide + ' .middle')
         }
 
-        if (slide === 'slide5') {
+        if (slide === 'slide6') {
             renderLargeIcons()
         }
 
@@ -383,11 +423,17 @@ function renderSlides(carouselContent, language) {
             insertComponent(el, '#' + slide + ' .middle')
         }
 
-        if (slide === 'slide5' || slide === 'slide4') {
+        if (slide === 'slide6' || slide === 'slide5') {
             insertComponent(bigArrow, '#' + slide + ' .back')
         }
 
-        insertComponent(createForm(slide, content.headline, content.title, null, content.paragraph), '#carousel-container .slide-section:last-child')
+        if (slide === 'slide1' || slide === 'slide9') {
+            dd('Slide is 1 or 9? True', debug)
+            insertComponent(createForm(slide, content.headline, content.title, null, content.paragraph, true), '#carousel-container .slide-section:last-child')
+        } else {
+            dd('Slide is 1 or 9? False', debug)
+            insertComponent(createForm(slide, content.headline, content.title, null, content.paragraph), '#carousel-container .slide-section:last-child')
+        }
 
     })
 
@@ -418,9 +464,9 @@ function renderSlides(carouselContent, language) {
         [300, 'left', 'dark', '50%', '#slide2'],
         [300, 'right', 'dark', '50%', '#slide2'],
         [300, 'left', 'light', '50%', '#slide3'],
-        [300, 'right', 'dark', '50%', '#slide5'],
         [300, 'right', 'dark', '50%', '#slide6'],
-        [300, 'left', 'dark', '50%', '#slide6'],
+        // [300, 'right', 'dark', '50%', '#slide4'],
+        // [300, 'left', 'dark', '50%', '#slide6'],
         [300, 'left', 'light', '50%', '#slide7'],
         [300, 'right', 'dark', '75%', '#slide8'],
 
@@ -432,12 +478,12 @@ function renderSlides(carouselContent, language) {
 
 
     // Calc height of slide4 title to fit
-    s4Headline = document.querySelector('#slide4 .headline').offsetHeight
-    s4Title = document.querySelector('#slide4 h1').offsetHeight
+    s4Headline = document.querySelector('#slide5 .headline').offsetHeight
+    s4Title = document.querySelector('#slide5 h1').offsetHeight
     s4Height = s4Headline + s4Title
     s3BarPosition = (s4Height / 2) + 188
-    insertBar(s4Height, 'right', 'light', s3BarPosition + 'px', '#slide3')
-    insertBar(s4Height, 'left', 'dark', s3BarPosition + 'px', '#slide5')
+    insertBar(s4Height, 'right', 'dark', s3BarPosition + 'px', '#slide4')
+    insertBar(s4Height, 'left', 'dark', s3BarPosition + 'px', '#slide6')
 
     // Activate page functions
     setPageButtons()
@@ -484,17 +530,17 @@ function setPageButtons() {
 
             document.querySelector(target).style.fontSize = newValue + 'px'
 
-            if (idParent == 'slide4') {
-                s4Headline = document.querySelector('#slide4 .headline').offsetHeight
-                s4Title = document.querySelector('#slide4 h1').offsetHeight
+            if (idParent == 'slide5') {
+                s4Headline = document.querySelector('#slide5 .headline').offsetHeight
+                s4Title = document.querySelector('#slide5 h1').offsetHeight
                 s4Height = s4Headline + s4Title
                 s3BarPosition = (s4Height / 2) + 188
 
-                document.querySelector('#slide3 .bar.right').style.height = s4Height + 'px'
-                document.querySelector('#slide5 .bar.left').style.height = s4Height + 'px'
+                document.querySelector('#slide4 .bar.right').style.height = s4Height + 'px'
+                document.querySelector('#slide6 .bar.left').style.height = s4Height + 'px'
 
-                document.querySelector('#slide3 .bar.right').style.top = s3BarPosition + 'px'
-                document.querySelector('#slide5 .bar.left').style.top = s3BarPosition + 'px'
+                document.querySelector('#slide4 .bar.right').style.top = s3BarPosition + 'px'
+                document.querySelector('#slide6 .bar.left').style.top = s3BarPosition + 'px'
 
             }
 
@@ -505,13 +551,6 @@ function setPageButtons() {
     });
 }
 
-let source = 'es';
-
-// Atualiza os posts da fonte selecionada
-document.getElementById('sourceSelector').addEventListener('change', (e) => {
-    source = e.target.value;
-    fetchPosts();
-});
 
 const radios = document.querySelectorAll('input[name="hue"]');
 radios.forEach(radio => {
@@ -533,56 +572,12 @@ function setLoadMessage(message) {
     document.querySelector('#loadmessage').innerText = message
 }
 
-// Qual o link da API?
-function getApiSource(source) {
-    switch (source) {
-        case 'es':
-            return 'https://litci.org/es/wp-json/wp/v2/posts';
-        case 'pt':
-        default:
-            return 'https://litci.org/pt/wp-json/wp/v2/posts';
-    }
-}
 
-// Busca os posts e preenche o select
-async function fetchPosts() {
-    try {
-        const api = `${getApiSource(source)}?per_page=20`;
-        const response = await fetch(api);
-        if (!response.ok) throw new Error("Erro ao carregar posts");
-
-        const posts = await response.json();
-        const postlist = document.getElementById('postSelector');
-        postlist.innerHTML = '';
-
-        if (posts.length === 0) return;
-
-        posts.forEach((post) => {
-            const opt = document.createElement('option');
-            opt.value = post.id;
-            opt.innerText = post.title.rendered;
-            opt.setAttribute('data-link', post.link); // Guarda o link diretamente no elemento
-            postlist.appendChild(opt);
-        });
-
-    } catch (error) {
-        console.error("Error on fetch posts:", error);
-    }
-}
-
-// Renderiza o conteúdo ao selecionar o post
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById('postSelector').addEventListener('change', async (e) => {
-        const selectedOption = e.target.selectedOptions[0];
-    });
-    fetchPosts(); // Carrega os posts na inicialização
-});
-
-
-async function generateText(content, language) {
+async function generateText(content, format, language) {
     const formData = new FormData();
-    formData.append('method', 'createCarousel');
+    formData.append('method', 'createOpenCarousel');
     formData.append('content', content);
+    formData.append('format', format)
     formData.append('language', language)
 
     try {
@@ -603,37 +598,29 @@ async function generateText(content, language) {
 
 
 async function renderCarousel() {
+    dd('Starting process...', debug)
     document.querySelector('#carousel-container').innerHTML = `<div class="loader-container"><div class="loader"></div><h3 id="loadmessage"></div></div>`
     setLoadMessage('Starting the carousel production...')
 
-    const postId = document.querySelector("#postSelector").value
-    const source = document.getElementById('sourceSelector').value
+    const language = document.querySelector('input[name="lang"]:checked').value;
+    dd('Language is: ' + language, debug)
 
-    switch (source) {
-        case 'pt':
-            language = 'portugues'
-            break;
-        default:
-            language = 'espanhol'
-    }
+    const format = document.querySelector('input[name="format"]:checked').value;
+    dd('Format is: ' + format, debug)
 
-    const apiBase = getApiSource(source);
-    const apiUrl = `${apiBase}/${postId}`;
+    const content = document.querySelector('#contentArea').value;
 
     try {
-        // Faz a requisição à API e aguarda a resposta
-        setLoadMessage('Fetching post data...')
-        const resp = await fetch(apiUrl);
-        const data = await resp.json();
-
-        // Obtém a imagem e gera o conteúdo do carrossel
-        ogimage = data.fimg_url;
+        ogimage = 'https://tribe-s3-production.imgix.net/C5yUOy3RzAZV9mFvgXoq5?auto=compress,format&dl';
         setLoadMessage('Generating text...')
-        const carouselContent = await generateText(data.link, placeholders); // Aguarda generateText
+        const carouselContent = await generateText(content, format, language); // Aguarda generateText
+        dd('Raw JSON is: ' + carouselContent, debug)
+        console.log(carouselContent)
 
         // Renderiza os slides
         setLoadMessage('Building slides...')
-        await renderSlides(carouselContent, source); // Aguarda renderSlides, se necessário
+        dd('Building slides...', debug)
+        await renderSlides(carouselContent, language); // Aguarda renderSlides, se necessário
     } catch (error) {
         document.querySelector('.loader').remove()
         setLoadMessage('Sorry. Something went wrong.\nTry again...')
