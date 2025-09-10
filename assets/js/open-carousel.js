@@ -30,7 +30,7 @@ const placeholders = {
             title: 'Aprovecha y síguenos',
             paragraph: 'Para no perderte los nuevos materiales',
         },
-        finalCta: 'Leea o artíuclo completo:'
+        finalCta: 'Leea mas en:'
     },
     portuguese: {
         site: 'www.litci.org/pt',
@@ -42,7 +42,7 @@ const placeholders = {
             title: 'Aproveita e já segue a gente',
             paragraph: 'Para não perder os novos materiais'
         },
-        finalCta: 'Lea el artículo completo:'
+        finalCta: 'Leia mais em:'
     }
 }
 
@@ -291,9 +291,24 @@ function createForm(id, headline, title, size, paragraph, image = false) {
 
 function changeImage(id, imageUrl) {
     dd('Id on ChangeImage is: ' + id, debug)
-    document.querySelector(`#${id} .ogimage img`).src = imageUrl
-}
+    const img = document.querySelector(`#${id} .ogimage img`);
+    if (!img) return;
 
+    // cria uma promessa para esperar a imagem carregar apenas uma vez
+    const waitForLoad = new Promise((resolve, reject) => {
+        img.addEventListener('load', resolve, { once: true });
+        img.addEventListener('error', reject, { once: true });
+    });
+
+    img.src = imageUrl;
+
+    waitForLoad.then(() => {
+        console.log(`Imagem de #${id} carregada, processando object-fit...`);
+        processImagesWithObjectFit(document.querySelector(`#${id}`));
+    }).catch(err => {
+        console.error("Erro ao carregar imagem:", err);
+    });
+}
 function renderLargeIcons() {
     el = document.createElement('div')
     el.className = 'icons-container'
@@ -615,7 +630,6 @@ async function renderCarousel() {
         setLoadMessage('Generating text...')
         const carouselContent = await generateText(content, format, language); // Aguarda generateText
         dd('Raw JSON is: ' + carouselContent, debug)
-        console.log(carouselContent)
 
         // Renderiza os slides
         setLoadMessage('Building slides...')
@@ -628,56 +642,60 @@ async function renderCarousel() {
     }
 }
 
-async function processImagesWithObjectFit(element) {
-    const images = element.querySelectorAll('img');
-    const promises = [];
+async function processImagesWithObjectFit(elementOrImg, maxWidth = 1080) {
+    let images;
+    if (elementOrImg.tagName === "IMG") {
+        images = [elementOrImg];
+    } else {
+        images = elementOrImg.querySelectorAll('img');
+    }
 
-    images.forEach(img => {
-        console.log('Rendering image: ', img)
-        // Check if the image has a computed style of object-fit: cover
+    const promises = Array.from(images).map(img => {
         const style = window.getComputedStyle(img);
-        if (style.objectFit === 'cover') {
-            promises.push(new Promise((resolve, reject) => {
+        if (style.objectFit !== 'cover') return Promise.resolve();
+
+        return new Promise((resolve, reject) => {
+            const imgEl = new Image();
+            imgEl.crossOrigin = 'anonymous';
+            imgEl.src = img.src;
+
+            imgEl.onload = () => {
+                const container = img;
+                const containerRect = container.getBoundingClientRect();
+                const containerRatio = containerRect.width / containerRect.height;
+                const imgRatio = imgEl.naturalWidth / imgEl.naturalHeight;
+
+                // Redimensiona largura para não travar
+                let canvasWidth = Math.min(imgEl.naturalWidth, maxWidth);
+                let canvasHeight = canvasWidth / containerRatio;
+
                 const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = canvasWidth;
+                tempCanvas.height = canvasHeight;
                 const ctx = tempCanvas.getContext('2d');
 
-                // Set canvas dimensions to match the rendered image
-                const imgRect = img.getBoundingClientRect();
-                tempCanvas.width = imgRect.width;
-                tempCanvas.height = imgRect.height;
+                let sx, sy, sWidth, sHeight;
 
-                const imgEl = new Image();
-                imgEl.crossOrigin = 'anonymous'; // Important for cross-origin images
-                imgEl.src = img.src;
+                if (imgRatio > containerRatio) {
+                    sHeight = imgEl.naturalHeight;
+                    sWidth = sHeight * containerRatio;
+                    sx = (imgEl.naturalWidth - sWidth) / 2;
+                    sy = 0;
+                } else {
+                    sWidth = imgEl.naturalWidth;
+                    sHeight = sWidth / containerRatio;
+                    sx = 0;
+                    sy = (imgEl.naturalHeight - sHeight) / 2;
+                }
 
-                imgEl.onload = () => {
-                    // Calculate source and destination sizes for a "cover" effect
-                    const imgRatio = imgEl.naturalWidth / imgEl.naturalHeight;
-                    const containerRatio = tempCanvas.width / tempCanvas.height;
-                    let sx, sy, sWidth, sHeight;
+                ctx.drawImage(imgEl, sx, sy, sWidth, sHeight, 0, 0, canvasWidth, canvasHeight);
 
-                    if (imgRatio > containerRatio) {
-                        sWidth = imgEl.naturalHeight * containerRatio;
-                        sHeight = imgEl.naturalHeight;
-                        sx = (imgEl.naturalWidth - sWidth) / 2;
-                        sy = 0;
-                    } else {
-                        sWidth = imgEl.naturalWidth;
-                        sHeight = imgEl.naturalWidth / containerRatio;
-                        sx = 0;
-                        sy = (imgEl.naturalHeight - sHeight) / 2;
-                    }
+                img.src = tempCanvas.toDataURL('image/png');
+                resolve();
+            };
 
-                    // Draw the image onto the temporary canvas
-                    ctx.drawImage(imgEl, sx, sy, sWidth, sHeight, 0, 0, tempCanvas.width, tempCanvas.height);
-
-                    // Replace the original image's source with the new data URL
-                    img.src = tempCanvas.toDataURL('image/png');
-                    resolve();
-                };
-                imgEl.onerror = reject;
-            }));
-        }
+            imgEl.onerror = reject;
+        });
     });
 
     await Promise.all(promises);
