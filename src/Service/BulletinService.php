@@ -131,6 +131,43 @@ class BulletinService
         return $result;
     }
 
+    public function getBulletinEn($method)
+    {
+        $emojis = json_decode(file_get_contents('https://litci.org/assets/json/emojis-pt.json'), TRUE);
+        $bulletin = [];
+
+        if ($method == 'priority') {
+            $url = 'https://litci.org/en/wp-json/wp/v2/posts?order_by=menu_order&categories=8308&per_page=5';
+        }
+
+        if ($method == 'lastfive') {
+            $url = 'https://litci.org/en/wp-json/wp/v2/posts?per_page=5';
+        }
+        if ($method == 'lastten') {
+            $url = 'https://litci.org/en/wp-json/wp/v2/posts?per_page=10';
+        }
+        if ($method == 'lasttwenty') {
+            $url = 'https://litci.org/en/wp-json/wp/v2/posts?per_page=20';
+        }
+
+        if ($method == 'lastweek') {
+            $date = date('Y-m-d\TH:i:s', strtotime('-7 days'));
+            $url = 'https://litci.org/en/wp-json/wp/v2/posts?after=' . $date;
+        }
+
+        if ($method == 'palestine') {
+            $date = date('Y-m-d\TH:i:s', strtotime('-7 days'));
+            $url = 'https://litci.org/en/wp-json/wp/v2/posts?after=' . $date . '&categories=8068&order_by=menu_order';
+        }
+
+        $json = file_get_contents($url);
+        $posts = json_decode($json, TRUE);
+        $bulletin = $this->populateArray($posts, $emojis);
+
+        $result = json_encode($bulletin);
+        return $result;
+    }
+
     // Get Costa Rica Bulletin
     public function getBulletinCostaRica($method)
     {
