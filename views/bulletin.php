@@ -66,9 +66,9 @@ get_component('header');
                             </div>
                         </label>
                         <label for="source-en" class="radio-card">
-                            <input type="radio" name="source" id="source-pt" value="en">
+                            <input type="radio" name="source" id="source-en" value="en">
                             <div>
-                                <span class="fi fi-en fis"></span>
+                                <span class="fi fi-gb fis"></span>
                                 English
                             </div>
                         </label>
