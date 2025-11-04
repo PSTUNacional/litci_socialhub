@@ -186,9 +186,16 @@ get_component('header');
                     switch (source) {
                         case "pt":
                             headerText = unicodeToEmoji('\\u{1F4E2}') + ' *Boletim da Liga Internacional dos Trabalhadores - Quarta Internacional*'
+                            footerText = unicodeToEmoji('\\u{1F534}') + ' *Siga-nos em nossos canais*\n\n' + unicodeToEmoji('\\u{1F4E2}') + '*WhatsApp*\nhttps://whatsapp.com/channel/0029VaCFjFDHQbS0dA0Yzb3g\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Site*\nhttps://litci.org/pt\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*YouTube*\nhttps://youtube.com/MarxismoVivo\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Facebook*\nhttps://facebook.com/litci.cuartainternacional\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Instagram*\nhttp://instagram.com/lit.ci/\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Twitter*\nhttp://twitter.com/LITCI'
                             break;
                         case "es":
                             headerText = unicodeToEmoji('\\u{1F4E2}') + ' *Boletín de la Liga Internacional de los Trabajadores - Cuarta Internacional*'
+                            footerText = unicodeToEmoji('\\u{1F534}') + ' *Siga-nos em nossos canais*\n\n' + unicodeToEmoji('\\u{1F4E2}') + '*WhatsApp*\nhttps://whatsapp.com/channel/0029VaCFjFDHQbS0dA0Yzb3g\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Site*\nhttps://litci.org/pt\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*YouTube*\nhttps://youtube.com/MarxismoVivo\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Facebook*\nhttps://facebook.com/litci.cuartainternacional\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Instagram*\nhttp://instagram.com/lit.ci/\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Twitter*\nhttp://twitter.com/LITCI'
+                            break;
+                        case "en":
+                            headerText = unicodeToEmoji('\\u{1F4E2}') + ' *Bulletin of International Worker\'s League - Fourth International*'
+                            footerText = unicodeToEmoji('\\u{1F534}') + ' *Follow us in our channels*\n\n' + unicodeToEmoji('\\u{1F4E2}') + '*WhatsApp*\nhttps://whatsapp.com/channel/0029VaCFjFDHQbS0dA0Yzb3g\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Site*\nhttps://litci.org/en\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*YouTube*\nhttps://youtube.com/MarxismoVivo\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Facebook*\nhttps://facebook.com/litci.cuartainternacional\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Instagram*\nhttp://instagram.com/lit.ci/\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Twitter*\nhttp://twitter.com/LITCI'
+
                             break;
                         case "cr":
                             headerText = unicodeToEmoji('\\u{1F4E2}') + ' *Boletín del Partido de la Clase Trabajadora - Costa Rica*'
@@ -205,6 +212,8 @@ get_component('header');
                         case "esp":
                             headerText = unicodeToEmoji('\\u{1F4E2}') + ' *Boletín de la Corriente Roja - Estado Espanhol*'
                             break;
+                        default:
+                            footerText = unicodeToEmoji('\\u{1F534}') + ' *Siga-nos em nossos canais*\n\n' + unicodeToEmoji('\\u{1F4E2}') + '*WhatsApp*\nhttps://whatsapp.com/channel/0029VaCFjFDHQbS0dA0Yzb3g\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Site*\nhttps://litci.org/pt\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*YouTube*\nhttps://youtube.com/MarxismoVivo\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Facebook*\nhttps://facebook.com/litci.cuartainternacional\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Instagram*\nhttp://instagram.com/lit.ci/\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Twitter*\nhttp://twitter.com/LITCI';
                     }
                     console.log('HeaderText is: ', headerText)
                     header.innerText = headerText + '\n\n' + formattedDate
@@ -221,7 +230,7 @@ get_component('header');
                     })
 
                     footer = document.createElement('p')
-                    footer.innerText = unicodeToEmoji('\\u{1F534}') + ' *Siga-nos em nossos canais*\n\n' + unicodeToEmoji('\\u{1F4E2}') + '*WhatsApp*\nhttps://whatsapp.com/channel/0029VaCFjFDHQbS0dA0Yzb3g\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Site*\nhttps://litci.org/pt\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*YouTube*\nhttps://youtube.com/MarxismoVivo\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Facebook*\nhttps://facebook.com/litci.cuartainternacional\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Instagram*\nhttp://instagram.com/lit.ci/\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Twitter*\nhttp://twitter.com/LITCI'
+                        footer.innerText = unicodeToEmoji('\\u{1F534}') + ' *Siga-nos em nossos canais*\n\n' + unicodeToEmoji('\\u{1F4E2}') + '*WhatsApp*\nhttps://whatsapp.com/channel/0029VaCFjFDHQbS0dA0Yzb3g\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Site*\nhttps://litci.org/pt\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*YouTube*\nhttps://youtube.com/MarxismoVivo\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Facebook*\nhttps://facebook.com/litci.cuartainternacional\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Instagram*\nhttp://instagram.com/lit.ci/\n\n' + unicodeToEmoji('\\u{1F449} \\u{1F3FD}') + '*Twitter*\nhttp://twitter.com/LITCI'
 
                     place.append(footer)
                 })
