@@ -137,7 +137,7 @@ class BulletinService
         $bulletin = [];
 
         if ($method == 'priority') {
-            $url = 'https://litci.org/en/wp-json/wp/v2/posts?order_by=menu_order&categories=8308&per_page=5';
+            $url = 'https://litci.org/en/wp-json/wp/v2/posts?order_by=menu_order&per_page=5';
         }
 
         if ($method == 'lastfive') {
