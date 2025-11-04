@@ -28,6 +28,9 @@ switch ($source) {
     case 'pt':
         $result = $bulletin->getBulletinPt($method);
         break;
+    case 'en':
+        $result = $bulletin->getBulletinEn($method);
+        break;
     case 'cr':
         $result = $bulletin->getBulletinCostaRica($method);
         break;

@@ -65,6 +65,13 @@ get_component('header');
                                 Portuguese
                             </div>
                         </label>
+                        <label for="source-en" class="radio-card">
+                            <input type="radio" name="source" id="source-pt" value="en">
+                            <div>
+                                <span class="fi fi-en fis"></span>
+                                English
+                            </div>
+                        </label>
                         <label for="source-ar" class="radio-card">
                             <input type="radio" name="source" id="source-ar" value="ar">
                             <div>
@@ -195,7 +202,7 @@ get_component('header');
                         case "ar":
                             headerText = unicodeToEmoji('\\u{1F4E2}') + ' *Boletín del Partido Socialista de los Trabajadores Unificado - Argentina*'
                             break;
-                            case "esp":
+                        case "esp":
                             headerText = unicodeToEmoji('\\u{1F4E2}') + ' *Boletín de la Corriente Roja - Estado Espanhol*'
                             break;
                     }
