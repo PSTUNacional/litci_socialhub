@@ -498,7 +498,6 @@ function renderSlides(carouselContent, language) {
         insertBar(height, side, color, position, place)
     })
 
-
     // Calc height of slide4 title to fit
     s4Headline = document.querySelector('#slide5 .headline').offsetHeight
     s4Title = document.querySelector('#slide5 h1').offsetHeight
@@ -595,7 +594,7 @@ function setLoadMessage(message) {
 }
 
 async function generateText(content, format, language) {
-    const API_URL = '/api/openai'; 
+    const API_URL = '../../../api/openai'; 
     const bodyData = {
         method: 'createOpenCarousel',
         content: content,
