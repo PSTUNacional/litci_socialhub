@@ -140,7 +140,6 @@ class OpenAiService
     }
 
     public function createOpenCarousel($content, $format, $language)
-
     {
 
         $formatMap = [
@@ -270,6 +269,26 @@ class OpenAiService
                     Contexto
                     Aqui está o texto do site para o carrossel: $content
                 PROMPT;
+
+        $response = $this->chatWithGpt($prompt);
+        $content = $response['choices'][0]['message']['content'];
+
+        if (!isset($content)) {
+            throw new Exception("Resposta inesperada da OpenAI.");
+        }
+
+        return $content;
+    }
+
+    public function translateCarousel($content, $language)
+    {
+        $prompt = <<<PROMPT
+            Translate this JSON to $language.
+            Return only the new JSON;
+
+            JSON to translate:
+            $content
+            PROMPT;
 
         $response = $this->chatWithGpt($prompt);
         $content = $response['choices'][0]['message']['content'];

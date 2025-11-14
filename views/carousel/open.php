@@ -3,6 +3,40 @@ include($_SERVER['DOCUMENT_ROOT'] . '/autoload.php');
 get_component('header');
 ?>
 <link rel="stylesheet" href="../../assets/css/opencarousel.css">
+<style>
+    .custom-confirm-button {
+        background-color: var(--primary);
+    }
+
+    .custom-confirm-button:hover {
+        background-color: var(--primary);
+        outline: 4px solid var(--primary-50);
+    }
+
+    .custom-input-container{
+        margin-top: 24px;
+        margin-bottom: 24px;
+    }
+
+    .custom-input-container label span {
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: 1px solid var(--gray-200);
+        cursor: pointer;
+    }
+
+    .custom-input-container label input:checked + span {
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: 1px solid var(--primary);
+        color: var(--primary);
+        background-color: var(--primary-10);
+    }
+
+    .custom-input-container label input {
+        display: none;
+    }
+</style>
 </head>
 
 <body>
@@ -25,6 +59,10 @@ get_component('header');
                         <div>
                             <input type="radio" id="lang-es" name="lang" value="spanish">
                             <label for="lang-es">Spanish</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="lang-en" name="lang" value="english">
+                            <label for="lang-en">English</label>
                         </div>
                     </div>
                     <h4 class="form-section-header">Select a Format</h4>
@@ -94,6 +132,7 @@ get_component('header');
                 <div style="display:flex; gap: var(--gap-medium); flex-direction: row;">
                     <button class="button primary" role="button" onclick="renderCarousel()">Generate</button>
                     <button class="button secondary" role="button" id="downloadAllBtn">Download All</button>
+                    <button class="button secondary" role="button" onclick="openTranslationModal()" id="downloadAllBtn">Translate</button>
                 </div>
             </div>
             <div id="carousel-container">

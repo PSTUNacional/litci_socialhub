@@ -1,4 +1,4 @@
-const debug = false
+let debug = false
 function dd(message) {
     if (debug == true) {
         console.log(message)
@@ -21,10 +21,12 @@ let id;
 
 const placeholders = {
     spanish: {
+        timezone: 'es-ES',
         site: 'www.litci.org/es',
         siteCta: 'Leer más en',
         instagram: '@lit.ci',
         next: 'Arrastra y lee',
+        bulletin: 'Boletín',
         slide6: {
             headline: 'Si este contenido\nte resulta útil',
             title: 'Aprovecha y síguenos',
@@ -33,16 +35,32 @@ const placeholders = {
         finalCta: 'Leea mas en:'
     },
     portuguese: {
+        timezone: 'pt-BR',
         site: 'www.litci.org/pt',
         siteCta: 'Leia mais em:',
         instagram: '@litqi.oficial',
         next: 'Arraste e leia',
+        bulletin: 'Informativo',
         slide6: {
             headline: 'Se esse conteúdo\nfaz sentido para você',
             title: 'Aproveita e já segue a gente',
             paragraph: 'Para não perder os novos materiais'
         },
         finalCta: 'Leia mais em:'
+    },
+    english: {
+        timezone: 'en-US',
+        site: "www.litci.org/en",
+        siteCta: "Read more at:",
+        instagram: "@iwl.fi",
+        next: "Swipe and read",
+        bulletin: 'Bulletin',
+        slide6: {
+            headline: "If this content\nmakes sense to you",
+            title: "Go ahead and follow us",
+            paragraph: "So you don't miss new materials"
+        },
+        finalCta: "Read more at:"
     }
 }
 
@@ -60,20 +78,6 @@ const slideTemplate = ` <div class="slide-section">
             </div>
             </div>
             </div>`
-
-// const textForm = `<form>
-//                     <label for="headline">Headline</label>
-//                     <input type="text" name="headline" value="">
-//                     <label for="title">Title</label>
-//                     <input type="text" name="headline" value="">
-//                     <label for="paragrpa">Paragraph</label>
-//                     <textarea type="text" name="headline" value=""></textarea>
-//                     <div class="imageForm" style="display:none">
-//                     <label for="image">Imagem</label>
-//                     <input type="file" name="image" accept="image/*">
-//                     </div>
-//                 </form>`
-
 
 const bigArrow = `<div class="bigArrow-container"><?xml version="1.0" encoding="UTF-8"?>
 <svg id="bigArrow" data-name="Camada 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 120">
@@ -120,15 +124,18 @@ function renderFooter(site, next, cta, slide) {
     insertComponent(footer, '#' + slide + ' .footer')
 }
 
-function renderHeader(instagram, slide) {
+function renderHeader(instagram, slide, language) {
+    instagram = placeholders[language]['instagram'];
+    timezone = placeholders[language]['timezone'];
+    bulletin = placeholders[language]['bulletin'];
     let date = new Date();
-    var today = date.toLocaleDateString("pt-BR", {
+    var today = date.toLocaleDateString(timezone, {
         day: "2-digit",
         month: "short",
         year: "numeric"
     });
 
-    const header = `<p>Informativo <span>${instagram}</span></p>
+    const header = `<p>${bulletin} <span>${instagram}</span></p>
                     <img class="logo" src="./assets/img/lit_logo_white.png"/>
                     <p class="date">${today}</p>`
 
@@ -409,7 +416,7 @@ function renderSlides(carouselContent, language) {
         currentElement.style.transform = 'translate(-50%, -50%) scale(var(--scale))'
 
         renderFooter(site, next, siteCta, slide)
-        renderHeader(instagram, slide)
+        renderHeader(instagram, slide, language)
 
         let content = carouselContent[slide]
 
@@ -587,31 +594,39 @@ function setLoadMessage(message) {
     document.querySelector('#loadmessage').innerText = message
 }
 
-
 async function generateText(content, format, language) {
-    const formData = new FormData();
-    formData.append('method', 'createOpenCarousel');
-    formData.append('content', content);
-    formData.append('format', format)
-    formData.append('language', language)
+    const API_URL = '/api/openai'; 
+    const bodyData = {
+        method: 'createOpenCarousel',
+        content: content,
+        format: format,
+        language: language
+    };
 
     try {
-        const response = await fetch('../../../api/openai', {
+        const response = await fetch(API_URL, {
             method: 'POST',
-            body: formData
-        })
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(bodyData)
+        });
 
-        if (!response.ok) throw new Error("Erro na requisição");
+        if (!response.ok) {
+            const errorBody = await response.text();
+            throw new Error(`Erro na requisição: Status ${response.status}. Detalhes: ${errorBody.substring(0, 100)}`);
+        }
 
         const data = await response.json();
         return data;
+
     } catch (error) {
-        console.error('Erro na requisição:', error);
-        return null;
+        console.error('Erro ao gerar texto:', error.message);
+        return { success: false, error: error.message }; 
     }
 }
 
-
+let carouselContent = ''
 async function renderCarousel() {
     dd('Starting process...', debug)
     document.querySelector('#carousel-container').innerHTML = `<div class="loader-container"><div class="loader"></div><h3 id="loadmessage"></div></div>`
@@ -628,7 +643,7 @@ async function renderCarousel() {
     try {
         ogimage = 'https://tribe-s3-production.imgix.net/C5yUOy3RzAZV9mFvgXoq5?auto=compress,format&dl';
         setLoadMessage('Generating text...')
-        const carouselContent = await generateText(content, format, language); // Aguarda generateText
+        carouselContent = await generateText(content, format, language); // Aguarda generateText
         dd('Raw JSON is: ' + carouselContent, debug)
 
         // Renderiza os slides
@@ -758,3 +773,163 @@ document.getElementById('downloadAllBtn').addEventListener('click', async () => 
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
 });
+
+function extractCurrentText() {
+    slides = document.querySelectorAll('.slide-item')
+    let finalResult = {};
+    for (let i = 0; i < 9; i++) {
+
+        if (slides[i]) {
+            let index = i + 1
+            let name = 'slide' + index;
+            let result = {};
+
+            let h = slides[i].querySelector('.headline');
+            let p = slides[i].querySelector('.paragraph');
+            let t = slides[i].querySelector('.title');
+
+            if (h && h.innerText.trim() !== '') {
+                result.headline = h.innerText.trim();
+            }
+
+            if (p && p.innerText.trim() !== '') {
+                result.paragraph = p.innerText.trim();
+            }
+
+            if (t && t.innerText.trim() !== '') {
+                result.title = t.innerText.trim();
+            }
+
+            finalResult[name] = result;
+        }
+    }
+    return finalResult
+}
+
+async function translateCarousel(language) {
+    const API_URL = '/api/openai'; 
+    let contentRaw = extractCurrentText()
+    content = JSON.stringify(contentRaw)
+
+    const bodyData = {
+        method: 'translateCarousel',
+        content: content,
+        language: language
+    };
+
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(bodyData)
+        });
+
+        if (!response.ok) {
+            const errorBody = await response.text();
+            throw new Error(`Erro na requisição: Status ${response.status}. Detalhes: ${errorBody.substring(0, 100)}`);
+        }
+
+        const data = await response.json();
+        renderSlides(data, language)
+
+    } catch (error) {
+        console.error('Erro ao gerar texto:', error.message);
+        return { success: false, error: error.message }; 
+    }
+}
+
+/**
+ * Function to open the SweetAlert2 modal for language selection.
+ */
+
+async function openTranslationModal() {
+    const inputOptions = {
+        'portuguese': 'Portuguese',
+        'spanihs': 'Spanish',
+        'english': 'English'
+    };
+
+    const { value: selectedLanguage } = await Swal.fire({
+        title: 'To which language do you want to translate?',
+        icon: 'question',
+        input: 'radio',
+        inputOptions: inputOptions,
+        inputValue: 'en',
+        showCancelButton: true,
+        confirmButtonText: 'Translate',
+        cancelButtonText: 'Cancel',
+        customClass: {
+            confirmButton: 'custom-confirm-button',
+            input: 'custom-input-container'
+        },
+        inputValidator: (value) => {
+            if (!value) {
+                return 'You need to choose a language!';
+            }
+        }
+    });
+
+    // Processamento do resultado após a interação do usuário
+    if (selectedLanguage) {
+        
+        // 1. EXIBIR O MODAL DE LOADING
+        Swal.fire({
+            title: 'Translating...',
+            html: 'Please wait while the content is being translated.',
+            // Adiciona o spinner de loading nativo do SweetAlert2
+            didOpen: () => {
+                Swal.showLoading();
+            },
+            allowOutsideClick: false, // Impede o fechamento acidental
+            allowEscapeKey: false,
+            showConfirmButton: false // Não mostra o botão de confirmação
+        });
+
+        try {
+            // 2. EXECUTAR A FUNÇÃO DE TRADUÇÃO (Assíncrona)
+            // IMPORTANTE: Certifique-se de que translateCarousel() retorna uma Promise
+            await translateCarousel(selectedLanguage);
+
+            // 3. APÓS O SUCESSO: Fechar o loading e mostrar o sucesso
+            Swal.close(); // Fecha o modal de loading
+          
+        } catch (error) {
+            // 4. EM CASO DE ERRO: Fechar o loading e mostrar a falha
+            Swal.close(); // Fecha o modal de loading
+            console.error("Translation failed:", error);
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Translation Failed',
+                text: 'An error occurred during translation. Please try again.',
+            });
+            
+        } 
+
+    } else if (selectedLanguage === undefined) {
+        // Se o usuário clicou 'Cancel' ou fora do modal
+        Swal.fire({
+            icon: 'info',
+            title: 'Translation Canceled',
+            text: 'No translation will be performed.'
+        });
+    }
+}
+
+// Exemplo de como a função translateCarousel() deve ser (retornando uma Promise)
+/*
+async function translateCarousel(lang) {
+    console.log(`Starting translation to ${lang}...`);
+    // Simula uma chamada de API ou operação de tradução demorada
+    await new Promise(resolve => setTimeout(resolve, 3000)); 
+    console.log("Translation done!");
+    // if (lang === 'es') throw new Error("API Limit Reached"); // Simular erro
+    return true; 
+}
+*/
+// ----------------------------------------------------
+// Exemplo de como chamar a função ao clicar em um botão
+// ----------------------------------------------------
+document.getElementById('traduzir-btn').addEventListener('click', abrirModalIdioma);

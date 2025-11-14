@@ -6,19 +6,29 @@ header('Content-Type: application/json; charset=utf-8');
 include($_SERVER['DOCUMENT_ROOT'] . '/autoload.php');
 
 use SH\Service\OpenAiService;
+
 $openai = new OpenAiService();
 
-if (!isset($_POST['method'])) {
+$json_data = file_get_contents('php://input');
+$data = json_decode($json_data, true);
+
+if ($data === null) {
+    http_response_code(400); // Bad Request
+    echo json_encode(['error' => 'Invalid JSON payload']);
+    exit;
+}
+
+if (!isset($data['method'])) {
     http_response_code(400);
     badRequest("Parameter 'method' is missing.");
 }
 
-$method = $_POST['method'];
+$method = $data['method'];
 
 if ($method === "createcaptions") {
-    $contentType = $_POST['type'] ?? null;
-    $content = $_POST['content'] ?? null;
-    $language = $_POST['language'] ?? 'spanish';
+    $contentType = $data['type'] ?? null;
+    $content = $data['content'] ?? null;
+    $language = $data['language'] ?? 'spanish';
 
     if (!$contentType || !$content) {
         badRequest("Parameters 'type' or 'content' are missing.");
@@ -30,39 +40,51 @@ if ($method === "createcaptions") {
         // Se já for JSON, apenas envie
         echo $response;
     }
-
 }
 
-if ($method === 'createCarousel')
-{
-    $content= $_POST['content'];
+if ($method === 'createCarousel') {
+    $content = $data['content'];
     if (!$content) {
         badRequest("Parameter 'content' is missing.");
     }
 
-    $language = $_POST['language'] ?? 'spanish';
-    
+    $language = $data['language'] ?? 'spanish';
+
     $response = $openai->createCarousel($content, $language);
 
     echo $response;
 }
 
-if ($method === 'createOpenCarousel')
-{
-    $content= $_POST['content'];
+if ($method === 'createOpenCarousel') {
+    $content = $data['content'];
     if (!$content) {
         badRequest("Parameter 'content' is missing.");
     }
 
-    $format= $_POST['format'];
+    $format = $data['format'];
     if (!$format) {
         badRequest("Parameter 'format' is missing.");
     }
 
-    $language = $_POST['language'] ?? 'spanish';
-    
+    $language = $data['language'] ?? 'spanish';
+
     $response = $openai->createOpenCarousel($content, $format, $language);
 
+    echo $response;
+}
+
+if ($method === 'translateCarousel') {
+    $content = $data['content'];
+    if (!$content) {
+        badRequest("Parameter 'content' is missing.");
+    }
+
+    $language = $data['language'];
+    if (!$language) {
+        badRequest("Parameter 'language' is missing.");
+    }
+
+    $response = $openai->translateCarousel($content, $language);
     echo $response;
 }
 
