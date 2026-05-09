@@ -164,7 +164,8 @@ async function renderBanner(id) {
     const places = ['bannerOne', 'bannerFour', 'story'].map(id => document.getElementById(id));
     places.forEach(place => {
         const img = place.querySelector('.picture-container');
-        img.style.backgroundImage = `url(${banner.fimg_url})`;
+        const proxiedUrl = `/proxy-image.php?url=${encodeURIComponent(banner.fimg_url)}`;
+        img.style.backgroundImage = `url(${proxiedUrl})`;
 
         const category = banner.categories_names[0] === 'Destacado' ? banner.categories_names[1] : banner.categories_names[0];
         place.querySelector('.catbadge').innerHTML = category;
